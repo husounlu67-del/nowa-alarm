@@ -2080,6 +2080,36 @@ function promptToken() {
   }
 }
 
+function restoreFromLearnedIDs() {
+  // learnedIDs formatı: { "id": "ItemAdı LevelAdı" }
+  // Her ID'yi CONFIRMED_IDS'e ekle ve CAT_DATA'ya yerleştir
+  Object.keys(learnedIDs).forEach(id => {
+    CONFIRMED_IDS.add(id);
+    const label = learnedIDs[id]; // örn: "Shade Dagger +5"
+    
+    // CAT_DATA'da eşleşen item+level bul
+    let placed = false;
+    for (const cat of CAT_DATA) {
+      if (placed) break;
+      const allItems = [...cat.items, ...(customItems[cat.id]||[])];
+      for (const item of allItems) {
+        if (placed) break;
+        // label "ItemAdı LevelAdı" formatında, kontrol et
+        if (!label.startsWith(item.name)) continue;
+        const levelName = label.slice(item.name.length).trim();
+        for (const lv of item.levels) {
+          if (lv.level !== levelName) continue;
+          if (!lv.ids) lv.ids = [];
+          if (!lv.ids.includes(id)) lv.ids.push(id);
+          lv.confirmed = true;
+          placed = true;
+          break;
+        }
+      }
+    }
+  });
+}
+
 function restoreCatIds(savedIDs) {
   if (!savedIDs) return;
   for (const cat of CAT_DATA) {
@@ -2118,9 +2148,15 @@ async function load() {
     if (gdata.customItems) customItems = gdata.customItems;
     if (gdata.selLv)       selLv       = gdata.selLv;
     if (gdata.learnedIDs)  Object.assign(learnedIDs, gdata.learnedIDs);
-    if (gdata.savedIDs)    restoreCatIds(gdata.savedIDs);
+    // Yeni format: savedIDs varsa kullan
+    if (gdata.savedIDs) {
+      restoreCatIds(gdata.savedIDs);
+    }
+    // Eski format veya ek olarak: learnedIDs'den CONFIRMED_IDS oluştur ve CAT_DATA'ya yerleştir
+    restoreFromLearnedIDs();
     setInd(GIST_TOKEN ? '☁ Bulut' : '☁ Salt Okunur', GIST_TOKEN ? '#00c8ff' : '#ffd600');
-    toast('s', '☁ Bulut Yüklendi', `Gist'ten ${Object.keys(gdata.learnedIDs||{}).length} ID yüklendi`);
+    const idCount = Object.keys(learnedIDs).length;
+    toast('s', '☁ Bulut Yüklendi', `${idCount} onaylı ID yüklendi`);
   } else {
     try {
       const d = localStorage.getItem('nowa_v5');
@@ -2131,11 +2167,11 @@ async function load() {
         if (p.selLv)       selLv       = p.selLv;
         if (p.learnedIDs)  Object.assign(learnedIDs, p.learnedIDs);
         if (p.savedIDs)    restoreCatIds(p.savedIDs);
+        restoreFromLearnedIDs();
       }
     } catch {}
     setInd('☁ Offline', '#ff4455');
   }
-  Object.keys(learnedIDs).forEach(id => CONFIRMED_IDS.add(id));
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────
