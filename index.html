@@ -922,7 +922,21 @@ function autoExport() {
 }
 
 function exportData() {
-  const data = { prices, customItems, selLv, learnedIDs };
+  // CAT_DATA'daki tüm id'leri (onaylı + tahmin) kaydet
+  const catIds = {};
+  for (const cat of CAT_DATA) {
+    catIds[cat.id] = {};
+    const allItems = [...cat.items, ...(customItems[cat.id]||[])];
+    for (const item of allItems) {
+      catIds[cat.id][item.name] = {};
+      for (const lv of item.levels) {
+        if (lv.ids && lv.ids.length > 0) {
+          catIds[cat.id][item.name][lv.level] = { ids: [...lv.ids], confirmed: !!lv.confirmed };
+        }
+      }
+    }
+  }
+  const data = { prices, customItems, selLv, learnedIDs, catIds };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -2016,7 +2030,24 @@ async function gistLoad() {
 }
 
 async function save() {
-  const data = { prices, customItems, selLv, learnedIDs };
+  // Her level'daki ID'leri onaylı ve tahmin olarak ayrı kaydet
+  const savedIDs = {};
+  // savedIDs yapısı: { "catId|itemName|levelName": { confirmed: [...], predicted: [...] } }
+  for (const cat of CAT_DATA) {
+    const allItems = [...cat.items, ...(customItems[cat.id]||[])];
+    for (const item of allItems) {
+      for (const lv of item.levels) {
+        if (!lv.ids || lv.ids.length === 0) continue;
+        const key = cat.id + '|' + item.name + '|' + lv.level;
+        const confirmed = lv.ids.filter(id => CONFIRMED_IDS.has(id));
+        const predicted = lv.ids.filter(id => !CONFIRMED_IDS.has(id));
+        if (confirmed.length > 0 || predicted.length > 0) {
+          savedIDs[key] = { confirmed, predicted };
+        }
+      }
+    }
+  }
+  const data = { prices, customItems, selLv, learnedIDs, savedIDs };
   try { localStorage.setItem('nowa_v5', JSON.stringify(data)); } catch {}
   if (!GIST_TOKEN) {
     // Token yoksa sadece localStorage'a kaydet, token iste
@@ -2049,6 +2080,36 @@ function promptToken() {
   }
 }
 
+function restoreCatIds(savedIDs) {
+  if (!savedIDs) return;
+  for (const cat of CAT_DATA) {
+    const allItems = [...cat.items, ...(customItems[cat.id]||[])];
+    for (const item of allItems) {
+      for (const lv of item.levels) {
+        const key = cat.id + '|' + item.name + '|' + lv.level;
+        const saved = savedIDs[key];
+        if (!saved) continue;
+        lv.ids = [];
+        // Onaylıları ekle ve CONFIRMED_IDS'e kaydet
+        if (saved.confirmed && saved.confirmed.length > 0) {
+          for (const id of saved.confirmed) {
+            if (!lv.ids.includes(id)) lv.ids.push(id);
+            CONFIRMED_IDS.add(id);
+            learnedIDs[id] = item.name + ' ' + lv.level;
+          }
+          lv.confirmed = true;
+        }
+        // Tahminleri ekle (kırmızı kalacak, CONFIRMED_IDS'e eklenmiyor)
+        if (saved.predicted && saved.predicted.length > 0) {
+          for (const id of saved.predicted) {
+            if (!lv.ids.includes(id)) lv.ids.push(id);
+          }
+        }
+      }
+    }
+  }
+}
+
 async function load() {
   setInd('☁ Yükleniyor...', '#ffd600');
   const gdata = await gistLoad();
@@ -2057,6 +2118,7 @@ async function load() {
     if (gdata.customItems) customItems = gdata.customItems;
     if (gdata.selLv)       selLv       = gdata.selLv;
     if (gdata.learnedIDs)  Object.assign(learnedIDs, gdata.learnedIDs);
+    if (gdata.savedIDs)    restoreCatIds(gdata.savedIDs);
     setInd(GIST_TOKEN ? '☁ Bulut' : '☁ Salt Okunur', GIST_TOKEN ? '#00c8ff' : '#ffd600');
     toast('s', '☁ Bulut Yüklendi', `Gist'ten ${Object.keys(gdata.learnedIDs||{}).length} ID yüklendi`);
   } else {
@@ -2068,6 +2130,7 @@ async function load() {
         if (p.customItems) customItems = p.customItems;
         if (p.selLv)       selLv       = p.selLv;
         if (p.learnedIDs)  Object.assign(learnedIDs, p.learnedIDs);
+        if (p.savedIDs)    restoreCatIds(p.savedIDs);
       }
     } catch {}
     setInd('☁ Offline', '#ff4455');
