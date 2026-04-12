@@ -1965,44 +1965,110 @@ if __name__ == "__main__":
 }
 
 // ── BULUT DEPOLAMA (GitHub Gist) ─────────────────────────────────
-const GIST_ID    = "";
-const GIST_TOKEN = "";
+let GIST_ID    = "6e21962efea4750ead0f01a0e87c8ef7";
+const GIST_TOKEN = "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";
 const GIST_FILE  = "nowa_ids.json";
 
 let gistSaveTimer = null;
 
-async function gistSave(data) { return false; }
+function setInd(text, color) {
+  const ind = document.getElementById('gist-ind');
+  if (ind) { ind.textContent = text; ind.style.color = color; }
+}
 
-async function gistLoad() { return null; }
+async function gistSave(data) {
+  if (!GIST_TOKEN) return false;
+  try {
+    const body = { files: { [GIST_FILE]: { content: JSON.stringify(data, null, 2) } } };
+
+    // Eğer GIST_ID yoksa yeni Gist oluştur
+    if (!GIST_ID) {
+      const r = await fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${GIST_TOKEN}`, 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+        body: JSON.stringify({ ...body, description: 'NOWA Alarm Data', public: false })
+      });
+      if (!r.ok) { const t = await r.text(); console.error('Gist oluşturma hatası:', r.status, t); return false; }
+      const j = await r.json();
+      GIST_ID = j.id;
+      console.log('Yeni Gist oluşturuldu:', GIST_ID);
+      return true;
+    }
+
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${GIST_TOKEN}`, 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { const t = await r.text(); console.error('Gist kayıt hatası:', r.status, t); }
+    return r.ok;
+  } catch(e) {
+    console.warn('Gist kayıt hatası:', e);
+    return false;
+  }
+}
+
+async function gistLoad() {
+  if (!GIST_TOKEN) return null;
+  try {
+    const url = GIST_ID
+      ? `https://api.github.com/gists/${GIST_ID}`
+      : `https://api.github.com/gists?per_page=30`;
+    const r = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${GIST_TOKEN}`, 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!r.ok) {
+      const t = await r.text();
+      console.error('Gist yükleme HTTP hatası:', r.status, t);
+      return null;
+    }
+    let j = await r.json();
+    // Gist listesinden doğru Gist'i bul
+    if (Array.isArray(j)) {
+      const found = j.find(g => g.files && g.files[GIST_FILE]);
+      if (!found) { console.warn('Listede nowa_ids.json bulunamadı'); return null; }
+      GIST_ID = found.id;
+      // Detay çek
+      const r2 = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        headers: { 'Authorization': `Bearer ${GIST_TOKEN}`, 'X-GitHub-Api-Version': '2022-11-28' }
+      });
+      j = await r2.json();
+    }
+    const content = j.files?.[GIST_FILE]?.content;
+    if (!content) { console.warn('Gist dosyası boş veya bulunamadı'); return null; }
+    return JSON.parse(content);
+  } catch(e) {
+    console.warn('Gist yükleme hatası:', e);
+    return null;
+  }
+}
 
 async function save() {
   const data = { prices, customItems, selLv, learnedIDs };
-  // localStorage'a anlık kaydet
   try { localStorage.setItem('nowa_v5', JSON.stringify(data)); } catch {}
-  // Gist'e debounce ile kaydet (300ms bekle, tekrar basılırsa sıfırla)
   clearTimeout(gistSaveTimer);
   gistSaveTimer = setTimeout(async () => {
+    setInd('☁ Kaydediliyor...', '#ffd600');
     const ok = await gistSave(data);
     if (ok) {
-      const ind = document.getElementById('gist-ind');
-      if (ind) { ind.textContent = '☁ Kaydedildi'; ind.style.color = '#00e676'; setTimeout(() => { ind.textContent = '☁ Bulut'; ind.style.color = '#6a8098'; }, 2000); }
+      setInd('☁ Kaydedildi ✓', '#00e676');
+      setTimeout(() => setInd('☁ Bulut', '#00c8ff'), 2000);
+    } else {
+      setInd('☁ Kayıt Hatası!', '#ff4455');
+      toast('e', '☁ Kayıt Hatası', 'Gist\'e yazılamadı. Konsolu kontrol et (F12).');
     }
   }, 300);
 }
 
 async function load() {
-  let loaded = false;
-  // Önce Gist'ten yükle
-  const ind = document.getElementById('gist-ind');
-  if (ind) { ind.textContent = '☁ Yükleniyor...'; ind.style.color = '#ffd600'; }
+  setInd('☁ Yükleniyor...', '#ffd600');
   const gdata = await gistLoad();
   if (gdata) {
     if (gdata.prices)      prices      = gdata.prices;
     if (gdata.customItems) customItems = gdata.customItems;
     if (gdata.selLv)       selLv       = gdata.selLv;
     if (gdata.learnedIDs)  Object.assign(learnedIDs, gdata.learnedIDs);
-    loaded = true;
-    if (ind) { ind.textContent = '☁ Bulut'; ind.style.color = '#00c8ff'; }
+    setInd('☁ Bulut', '#00c8ff');
     toast('s', '☁ Bulut Yüklendi', `Gist'ten ${Object.keys(gdata.learnedIDs||{}).length} ID yüklendi`);
   } else {
     // Gist başarısız → localStorage fallback
@@ -2014,10 +2080,10 @@ async function load() {
         if (p.customItems) customItems = p.customItems;
         if (p.selLv)       selLv       = p.selLv;
         if (p.learnedIDs)  Object.assign(learnedIDs, p.learnedIDs);
-        loaded = true;
+        toast('w', '⚠ Yerel Veri', 'Gist bağlanamadı, localStorage kullanılıyor. Konsolu kontrol et (F12).');
       }
     } catch {}
-    if (ind) { ind.textContent = '☁ Offline'; ind.style.color = '#ff4455'; }
+    setInd('☁ Offline', '#ff4455');
   }
   Object.keys(learnedIDs).forEach(id => CONFIRMED_IDS.add(id));
 }
