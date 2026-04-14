@@ -1633,8 +1633,7 @@ def parse_market_records(data):
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            zeros   = data[j+13:j+20]
-            if 10_000 <= price <= 9_990_000_000 and zeros == b"\\x00" * 7:
+            if 10_000 <= price <= 9_999_999_999:
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
@@ -1956,7 +1955,7 @@ async function save() {
     } else {
       setInd('☁ Hata!', '#ff4455');
     }
-  }, 300);
+  }, 10000);
 }
 
 function promptToken() {
