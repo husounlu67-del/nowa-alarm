@@ -992,53 +992,103 @@ function importData() {
 
 function downloadMarketScript() {
   const script = `"""
-NOWA ONLINE - PAZAR ANALİZ SCRİPTİ (v2 - Çoklu Sunucu + Birikimli Mod)
-========================================================================
-Kullanım:
-  1. python C:\\adb\\market_dinleme.py
-  2. Pazar perşömenini AÇ → listeyi gez → KAPAT
-  3. Otomatik analiz → Excel
-  4. Birden fazla tarama yapıp birleştirebilirsin
-
+NOWA ONLINE - PAZAR ANALİZ SCRİPTİ v3
 pip install openpyxl
 """
 
 import struct, socket, subprocess, time, os, json
 from datetime import datetime
-from collections import defaultdict
 
-# ══════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════
 #  AYARLAR
-# ══════════════════════════════════════════════════════════════════
-ID_DB_PATH    = r"C:\\adb\\nowa_ids.json"
-BIRIKIM_PATH  = r"C:\\adb\\pazar_birikim.json"   # Birikimli kayıt
-ADB           = r"D:\\LDPlayer\\LDPlayer9\\adb.exe"
-ADB_SERIAL    = "127.0.0.1:5555"
-PCAP_PATH     = "/sdcard/analiz_scan.pcap"
-LOCAL_PCAP    = r"C:\\adb\\analiz_scan.pcap"
-EXCEL_OUT     = r"C:\\adb\\pazar_analiz.xlsx"
-
-# Hedef oyuncu takibi (boş bırakırsan devre dışı)
-HEDEF_OYUNCU  = "ImNoSSee"
-
-# Bilinen sunucu IP'leri - yeni IP tespit edilirse otomatik eklenir
-BILINEN_SUNUCULAR = {
-    "213.238.175.103",
-    "213.238.175.104",
-    "213.238.175.105",
-}
-# ══════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════
+ID_DB_PATH   = r"C:\\adb\\nowa_ids.json"
+BIRIKIM_PATH = r"C:\\adb\\pazar_birikim.json"
+ADB          = r"D:\\LDPlayer\\LDPlayer9\\adb.exe"
+ADB_SERIAL   = "127.0.0.1:5555"
+PCAP_PATH    = "/sdcard/analiz_scan.pcap"
+LOCAL_PCAP   = r"C:\\adb\\analiz_scan.pcap"
+EXCEL_OUT    = r"C:\\adb\\pazar_analiz.xlsx"
+HEDEF_OYUNCU = "ImNoSSee"
+# ══════════════════════════════════════════════════════════════
 
 KNOWN_IDS = {
-    "b078450b":"Hope's Frozen Staff +0","347a450b":"Hope's Frozen Staff +4",
-    "357a450b":"Hope's Frozen Staff +5","366a450b":"Hope's Frozen Staff +6","377a450b":"Hope's Frozen Staff +7",
-    "d3fa460b":"Iceberg Staff +0","a522470b":"Iceberg Staff +1",
-    "71fb460b":"Iceberg Staff +5","72fb460b":"Iceberg Staff +6","73fb460b":"Iceberg Staff +7",
+    "10243217":"Fragment of Thnder LWL 3 +0", "15719a0e":"Rogue Titan Pads +7", "2d6d9a0e":"Rogue Titan Pads +7",
+    "9f679f06":"Bloody Dagger +7", "ed2a8b0e":"Rogue Full Guard Pauldron +7", "506e9916":"Red Chest +0",
+    "68bc3217":"Green Gem LVL 2 +0", "0b641c07":"Frozendeath Dagger +0", "5157470c":"Warrior Holy Titan Pads +1",
+    "c719e10b":"Thunder Animor +5", "3abcbf10":"Priest Fabric Pauldron +8", "0ac4bf10":"Priest Fabric Helmet +8",
+    "6d1a8112":"Shaman Silver Earring Old", "9bbf090a":"IronShade Bow Reb+5", "ff18380c":"Warrior Titan Helmet +7",
+    "1f35080a":"Bloody Bow +7", "21130c11":"Priest Holy Titan Gauntlets +1", "390f0c11":"Priest Holy Titan Helmet +1",
+    "da9c8e0f":"Mage Fabric Gauntlets +6", "dac9bf10":"Priest Fabric Gauntlets +6", "90049b16":"Talisman +0",
+    "da00b708":"Thunder Impact Reb+4", "471f1c13":"Str Necklace +0", "b0b03217":"Sunlight Gem LWL 4 +0",
+    "90d57006":"Legendary Cape +0", "78344b30":"Middle Mastery CR BOX +0", "73679f06":"Bloody Dagger +3",
+    "82d39d0f":"Mage Half Guard Pauldron +8", "0cbfa90e":"Rogue Holy Titan Boots +6", "54b3a90e":"Rogue Holy Titan Pads +6",
+    "3cb7a90e":"Rogue Holy Titan Helmet +6", "24bba90e":"Rogue Holy Titan Gauntlets +6", "2f6b9a0e":"Rogue Titan Pauldron +7",
+    "17c9fc10":"Rogue Titan Pads +7", "0cbda90e":"Rogue Holy Titan Boots +4", "6bafa90e":"Rogue Holy Titan Pauldron +6",
+    "255f470c":"Warrior Holy Titan Gauntlets +5", "6dada90e":"Rogue Holy Titan Pauldron +5", "245f470c":"Warrior Holy Titan Gauntlets +4",
+    "fd729a0e":"Rogue Titan Helmet +5", "fc729a0e":"Rogue Titan Helmet +4", "395b470c":"Rogue Holy Titan Helmet +1",
+    "e02b3217":"Fragment of Tempest LWL 5 +0", "a0f7491e":"High CR BOX +0", "e0a83217":"Silver Gem LWL 6 +0",
+    "25b9a90e":"Rogue Holy Titan Gauntlets +5", "0d63470c":"Warrior Holy Titan Boots +5", "485b470c":"Warrior Holy Titan Helmet +6",
+    "305f470c":"Warrior Holy Titan Gauntlets +6", "3f5b470c":"Warrior Holy Titan Helmet +7", "6953470c":"Warrior Holy Titan Pauldron +1",
+    "7853470c":"Warrior Holy Titan Pauldron +6", "6eada90e":"Rogue Holy Titan Pauldron +6", "3eb5a90e":"Rogue Holy Titan Helmet +6",
+    "56b1a90e":"Rogue Holy Titan Pads +6", "6f53470c":"Warrior Holy Titan Pauldron +7", "7953470c":"Warrior Holy Titan Pauldron +7",
+    "5557470c":"Warrior Holy Titan Pads +5", "2115380c":"Warrior Titan Pads +7", "315f470c":"Warrior Holy Titan Gauntlets +7",
+    "0963470c":"Warrior Holy Titan Boots +1", "51b1a90e":"Rogue Holy Titan Pads +1", "fd18380c":"Warrior Titan Helmet +5",
+    "7dafd00c":"Warrior Titan Helmet Reb+5", "0a19380c":"Warrior Titan Helmet +8", "7bafd00c":"Warrior Titan Helmet Reb+3",
+    "15c9fc10":"Priest Titan Pads +5", "cd20380c":"Warrior Titan Boots +5", "2d11380c":"Warrior Titan Pauldron +5",
+    "ce7a9a0e":"Rogue Titan Boots +6", "2e11380c":"Warrior Titan Pauldron +6", "e6d0fc10":"Priest Titan Gauntlets +6",
+    "7fea8b07":"Giant Phantom Sword +7", "1515380c":"Warrior Titan Pads +5", "2b11380c":"Warrior Titan Pauldron +3",
+    "2b6b9a0e":"Rogue Titan Pauldron +3", "f534080a":"Bloody Bow +5", "79afd00c":"Warrior Titan Helmet Reb+1",
+    "91abd00c":"Warrior Titan Pads Reb+1", "c0c53517":"Storem Mp Pot +0", "f3cefc10":"Priest Holy Titan Helmet +7",
+    "e501330f":"Rogue Titan Pauldron Reb+1", "3911380c":"Warrior Titan Pauldron +7", "d920380c":"Warrior Titan Boots +7",
+    "e51c380c":"Warrior Titan Gauntlets +5", "cd7a9a0e":"Rogue Titan Boots +5", "e5769a0e":"Rogue Titan Gauntlets +5",
+    "22c0bf10":"Priest Fabric Pads +8", "570b0c11":"Priest Holy Titan Pads +7", "f54b420f":"Rogue Holy Titan Helmet Reb+1",
+    "c553420f":"Rogue Holy Titan Boots Reb+1", "0d48420f":"Rogue Holy Titan Pads Reb+1", "dd4f420f":"Rogue Holy Titan Gauntlets Reb+1",
+    "2544420f":"Rogue Holy Titan Pauldron Reb+1", "c953420f":"Rogue Holy Titan Boots Reb+5", "4b898312":"Elarin Ring +1",
+    "71b1ad13":"Ring of Shadow +0", "d62e8b0e":"Rogue Full Guard Pads +8", "ee2a8b0e":"Rogue Full Guard Pauldron +8",
+    "b6888312":"Rogue Silver Earring +0", "9059170a":"Dragon Wing Bow +6", "cf05330f":"Rogue Titan Pads Reb+3",
+    "013f4a14":"Elderwood Belt +0", "e61c380c":"Warrior Titan Gauntlets +6", "8911330f":"Rogue Titan Boots Reb+5",
+    "e901330f":"Rogue Titan Pauldron Reb+5", "d105330f":"Rogue Titan Pads Reb+5", "e5789a0e":"Rogue Titan Gauntlets +7",
+    "e7769a0e":"Rogue Titan Gauntlets +7", "cf7a9a0e":"Rogue Titan Boots +7", "cd7c9a0e":"Rogue Titan Boots +7",
+    "27b9a90e":"Rogue Holy Titan Gauntlets +7", "0fbda90e":"Rogue Holy Titan Boots +7", "0dbfa90e":"Rogue Holy Titan Boots +7",
+    "57b1a90e":"Rogue Holy Titan Pads +7", "6fada90e":"Rogue Holy Titan Pauldron +7", "6dafa90e":"Rogue Holy Titan Pauldron +7",
+    "be328b0e":"Rogue Full Guard Helmet +8", "aca7d00c":"Warrior Titan Pauldron Reb+4", "f9e87e09":"Wrath's Spear Reb+1",
+    "3314b207":"Katana Sword Reb+1", "a522470b":"Iceberg Staff Reb+1", "d15b1907":"Cold Dagger +7",
+    "c03da516":"SKILL QUEST +0", "f734080a":"Bloody Bow +7", "b147140a":"Arcane Bow +3",
+    "cf469009":"HellFire +0", "f927470b":"Hope's Thunder Staff Reb+5", "8dbf7e09":"Firelance +7",
+    "e4469009":"HellFire Bow +6", "8bbf7e09":"Firelance +5", "6383c607":"King Axe +5",
+    "23fd560b":"Venom Hammer +5", "2bfd560b":"Nightfang Hammer +3", "0d914d08":"Frozen Axe +0",
+    "894bb913":"Fire Ring +1", "cd70b913":"Frozen Ring +0", "ba888312":"Elfen Earring +0",
+    "a6981a13":"Amulet Of Evil +0", "88f47206":"Low Mastery CR BOX +0", "f8273217":"Fragment of Eclipse LWL 4 +0",
+    "b0333217":"Fragment of Obsidian LWL 7 +0", "10b6b335":"Full Premium +0", "d0f2c913":"Clan Premium +0",
+    "284ab929":"Lucky Tried +0", "98b9b02f":"Character Seal Scrool +0", "3ee2da0f":"Mage Holy Titan Helmet +6",
+    "3de2da0f":"Mage Holy Titan Helmet +5", "8ff47206":"Middle Mastery CR BOX +0", "8af47206":"Middle Mastery CR BOX +0",
+    "8bf47206":"High Mastery CR BOX +0", "db00b708":"Thunder Impact Reb+5", "04fcb608":"Thunder Impact Reb+5",
+    "dcfcb608":"Thunder Impact Reb+5", "e200b708":"Thunder Impact Reb+5", "28fd560b":"Venom Hammer Reb+3",
+    "29fd560b":"Venom Hammer Reb+4", "2afd560b":"Venom Hammer Reb+5", "09170c11":"Priest Holy Titan Boots +1",
+    "495b470c":"Warrior Holy Titan Helmet +7", "6157470c":"Warrior Holy Titan Pads +7", "1963470c":"Warrior Holy Titan Boots +7",
+    "e9e9df0c":"Warrior Holy Titan Pauldron Reb+1", "baf1df0c":"Warrior Holy Titan Helmet Reb+2", "d4eddf0c":"Warrior Holy Titan Pads Reb+4",
+    "dd7e1413":"Courage Pendant +1", "017c8012":"Courage Earring +1", "bbf1df0c":"Warrior Holy Titan Helmet Reb+3",
+    "ebe9df0c":"Warrior Holy Titan Pauldron Reb+3", "8bf9df0c":"Warrior Holy Titan Boots Reb+3", "a3f5df0c":"Warrior Holy Titan Gauntlets Reb+3",
+    "fd749a0e":"Rogue Titan Helmet +7", "510b0c11":"Priest Holy Titan Pads +1", "1b150c11":"Priest Holy Titan Gauntlets +7",
+    "4b0d0c11":"Priest Holy Titan Pads +7", "23c7fc10":"Priest Titan Pauldron +7", "16c9fc10":"Priest Titan Pads +6",
+    "feccfc10":"Priest Titan Helmet +6", "22c7fc10":"Priest Titan Pauldron +6", "0bcbfc10":"Priest Titan Pads +7",
+    "c3d6fc10":"Priest Titan Boots +7", "dbd2fc10":"Priest Titan Gauntlets +7", "7b6b9f06":"Bloody Dagger Reb+5",
+    "f2c7bf10":"Priest Fabric Gauntlets +8", "0bc4bf10":"Priest Fabric Helmet Reb+1", "23c0bf10":"Priest Fabric Pads Reb+1",
+    "3bbcbf10":"Priest Fabric Pauldron Reb+1", "dbcbbf10":"Priest Fabric Boots Reb+1", "f3c7bf10":"Priest Fabric Gauntlets Reb+1",
+    "320acf10":"Priest Half Guard Gauntlets +8", "5802cf10":"Priest Half Guard Pads +8", "100ecf10":"Priest Half Guard Boots +8",
+    "4006cf10":"Priest Half Guard Helmet +8", "1a0ecf10":"Priest Half Guard Boots +8", "5702cf10":"Priest Half Guard Pads +7",
+    "6102cf10":"Priest Half Guard Pads +7", "58fc7206":"High Mastery CR BOX +0", "f1988e0f":"Mage Fabric Helmet +5",
+    "12998e0f":"Mage Fabric Helmet +8", "42918e0f":"Mage Fabric Pauldron +8", "2a958e0f":"Mage Fabric Pads +8",
+    "f99c8e0f":"Mage Fabric Gauntlets +7", "41918e0f":"Mage Fabric Pauldron +7", "29958e0f":"Mage Fabric Pads +7",
+    "11998e0f":"Mage Fabric Helmet +7", "e1a08e0f":"Mage Fabric Boots +7", "41d99d0f":"Mage Half Guard Helmet Reb+1",
+    "10e19d0f":"Mage Half Guard Boots +8", "57d59d0f":"Mage Half Guard Pads +7", "28dd9d0f":"Mage Half Guard Gauntlets +8",
+    "51db9d0f":"Mage Half Guard Helmet +7", "39df9d0f":"Mage Half Guard Gauntlets +7", "21e39d0f":"Mage Half Guard Boots +7",
 }
 
 
 def log(msg):
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
 def load_id_db():
@@ -1048,28 +1098,26 @@ def load_id_db():
         if os.path.exists(ID_DB_PATH):
             with open(ID_DB_PATH, "r", encoding="utf-8") as f:
                 saved = json.load(f)
-            if isinstance(saved, dict) and "confirmed" in saved:
+            if isinstance(saved, dict) and "learnedIDs" in saved:
+                confirmed.update(saved["learnedIDs"])
+                log(f"  {len(saved['learnedIDs'])} ID yüklendi")
+            elif isinstance(saved, dict) and "confirmed" in saved:
                 confirmed.update(saved.get("confirmed", {}))
                 predicted.update(saved.get("predicted", {}))
-                log(f"  {len(saved.get('confirmed',{}))} onaylı + {len(saved.get('predicted',{}))} tahmin ID yüklendi")
-            else:
-                confirmed.update(saved)
     except Exception as e:
-        log(f"  ID DB yükleme hatası: {e}")
+        log(f"  ID DB hatası: {e}")
     return confirmed, predicted
 
 
 def load_birikim():
-    """Birikimli tarama verilerini yükle."""
     try:
         if os.path.exists(BIRIKIM_PATH):
             with open(BIRIKIM_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            log(f"  Birikim yüklendi: {len(data.get('records',[]))} kayıt, {len(data.get('sellers',{}))} satıcı")
-            return data
-    except:
-        pass
-    return {"records": [], "sellers": {}, "scan_count": 0, "hedef_bulundu": False}
+                d = json.load(f)
+            log(f"  Birikim: {len(d.get('records',[]))} kayıt")
+            return d
+    except: pass
+    return {"records": [], "sellers": {}, "scan_count": 0}
 
 
 def save_birikim(data):
@@ -1077,15 +1125,11 @@ def save_birikim(data):
         with open(BIRIKIM_PATH, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        log(f"  Birikim kaydetme hatası: {e}")
+        log(f"  Birikim kayıt hatası: {e}")
 
 
 def merge_records(birikim, new_records):
-    """Yeni kayıtları birikime ekle, tekrar edenleri atla."""
-    existing = set()
-    for r in birikim["records"]:
-        existing.add((r["seller"], r["item_id"], r["price"]))
-
+    existing = set((r["seller"], r["item_id"], r["price"]) for r in birikim["records"])
     added = 0
     for r in new_records:
         key = (r["seller"], r["item_id"], r["price"])
@@ -1093,38 +1137,29 @@ def merge_records(birikim, new_records):
             birikim["records"].append(r)
             existing.add(key)
             added += 1
-            # Satıcı listesini güncelle
             s = r["seller"]
-            if s not in birikim["sellers"]:
-                birikim["sellers"][s] = 0
-            birikim["sellers"][s] += 1
-
+            birikim["sellers"][s] = birikim["sellers"].get(s, 0) + 1
     birikim["scan_count"] = birikim.get("scan_count", 0) + 1
     return added
 
 
 def adb(cmd):
     try:
-        return subprocess.run(
-            [ADB, "-s", ADB_SERIAL, "shell", cmd],
-            capture_output=True, timeout=20)
-    except:
-        return None
+        return subprocess.run([ADB, "-s", ADB_SERIAL, "shell", cmd],
+                              capture_output=True, timeout=20)
+    except: return None
 
 
 def start_tcpdump():
-    """IP filtresi YOK - tüm TCP trafiği yakala (iOS ve farklı shard desteği)."""
     adb("su 0 killall tcpdump 2>/dev/null")
     time.sleep(1)
     adb(f"su 0 rm -f {PCAP_PATH}")
     time.sleep(0.3)
-    # ÖNEMLİ: 'host X.X.X.X' filtresi kaldırıldı → tüm TCP
-    subprocess.Popen(
-        [ADB, "-s", ADB_SERIAL, "shell",
-         f"su 0 tcpdump -i any -s 0 tcp -w {PCAP_PATH} 2>/dev/null"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen([ADB, "-s", ADB_SERIAL, "shell",
+                      f"su 0 tcpdump -i any -s 0 tcp -w {PCAP_PATH} 2>/dev/null"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(2)
-    log("tcpdump başlatıldı. [Filtre: tüm TCP - iOS uyumlu]")
+    log("tcpdump baslatildi.")
 
 
 def stop_tcpdump():
@@ -1137,17 +1172,15 @@ def get_pcap_size():
         r = adb(f"su 0 wc -c {PCAP_PATH}")
         if r and r.stdout:
             return int(r.stdout.split()[0])
-    except:
-        pass
+    except: pass
     return 0
 
 
 def pull_pcap():
     adb("su 0 killall tcpdump")
     time.sleep(2)
-    r = subprocess.run(
-        [ADB, "-s", ADB_SERIAL, "pull", PCAP_PATH, LOCAL_PCAP],
-        capture_output=True, timeout=120)
+    r = subprocess.run([ADB, "-s", ADB_SERIAL, "pull", PCAP_PATH, LOCAL_PCAP],
+                       capture_output=True, timeout=120)
     return r.returncode == 0 and os.path.exists(LOCAL_PCAP)
 
 
@@ -1172,13 +1205,7 @@ def read_packets(path):
 
 
 def extract_payloads(packets):
-    """
-    IP filtresi kaldırıldı. Yeni sunucu IP'leri tespit edilirse kaydedilir.
-    Sadece yapısal kontrolle pazar paketleri ayrıştırılır.
-    """
     result = b""
-    detected_ips = set()
-
     for pkt in packets:
         try:
             if len(pkt) < 20: continue
@@ -1189,102 +1216,70 @@ def extract_payloads(packets):
             else: continue
             if len(pkt) <= ip_start + 20: continue
             if (pkt[ip_start] >> 4) != 4: continue
-            ihl   = (pkt[ip_start] & 0x0F) * 4
-            proto = pkt[ip_start + 9]
-            if proto != 6: continue  # Sadece TCP
-            src = socket.inet_ntoa(pkt[ip_start + 12:ip_start + 16])
-
-            # IP filtresi YOK - tüm TCP'yi işle
-            # Yeni IP tespiti (bilgilendirme amaçlı)
-            if src not in BILINEN_SUNUCULAR and not src.startswith("127."):
-                detected_ips.add(src)
-
+            ihl  = (pkt[ip_start] & 0x0F) * 4
+            if pkt[ip_start + 9] != 6: continue
             ts   = ip_start + ihl
             if len(pkt) <= ts + 20: continue
             doff = ((pkt[ts + 12] >> 4) & 0xF) * 4
             pay  = pkt[ts + doff:]
             if len(pay) >= 10:
                 result += pay
-        except:
-            pass
-
-    if detected_ips:
-        log(f"  Yeni sunucu IP tespiti: {detected_ips}")
-        log("  → BILINEN_SUNUCULAR listesine eklenebilir")
-
+        except: pass
     return result
 
 
 def parse_records(data):
-    """
-    Doğrulanmış format: [name_len 2B LE][name UTF-16-LE][items...]
-    Her item = 20 byte: [flag][item_id 4B][junk 4B][price 4B][zero 7B]
-    """
-    records = []
-    seen    = set()
-    n       = len(data)
-    i       = 0
-
+    records, seen, n, i = [], set(), len(data), 0
     while i < n - 22:
-        if data[i] == 0xaa and i+1 < n and data[i+1] == 0x55:
+        if data[i] == 0xaa and i + 1 < n and data[i+1] == 0x55:
             i += 2; continue
-
         if i + 2 > n: break
         name_len = struct.unpack("<H", data[i:i+2])[0]
-
         if not (2 <= name_len <= 25):
             i += 1; continue
-
         name_start = i + 2
         name_end   = name_start + name_len * 2
-
-        if name_end + 20 > n:
+        if name_end + 21 > n:
             i += 1; continue
-
         try:
             name = data[name_start:name_end].decode("utf-16-le")
         except:
             i += 1; continue
-
         if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
             i += 1; continue
-
         j = name_end
         item_count = 0
-
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            zero7   = data[j+13:j+20]
-
-            if (1_000 <= price <= 9_999_999_999):
+            if 1_000 <= price <= 9_999_999_999:
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
-                    records.append({"seller": name, "item_id": item_id, "qty": 1, "price": price})
+                    records.append({"seller": name, "item_id": item_id, "price": price})
                 item_count += 1
                 j += 20
             else:
                 break
-
         if item_count > 0:
             i = j
         else:
             i += 1
-
     return records
 
 
-def check_hedef(records, birikim):
-    """Hedef oyuncuyu kontrol et."""
-    if not HEDEF_OYUNCU:
-        return False
-    if birikim.get("hedef_bulundu"):
-        return True
-    for r in records:
-        if r["seller"].lower() == HEDEF_OYUNCU.lower():
-            return True
-    return False
+def hedef_uyari(oyuncu):
+    log(f"  HEDEF BULUNDU: {oyuncu} pazarda!")
+    try:
+        import winsound
+        for _ in range(5): winsound.Beep(1200, 300); time.sleep(0.1)
+    except: pass
+    try:
+        import subprocess as sp
+        sp.Popen(["powershell", "-WindowStyle", "Hidden", "-Command",
+                  f'Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show("HEDEF {oyuncu} PAZARDA!", "NOWA", 0, 48)'],
+                 creationflags=0x08000000)
+    except: pass
 
 
 def save_excel(records, confirmed=None, predicted=None, birikim_modu=False):
@@ -1292,260 +1287,156 @@ def save_excel(records, confirmed=None, predicted=None, birikim_modu=False):
         from openpyxl import Workbook
         from openpyxl.styles import PatternFill, Font, Alignment
     except ImportError:
-        log("HATA: pip install openpyxl")
-        return
+        log("HATA: pip install openpyxl"); return
 
     db_c = confirmed or {}
     db_p = predicted or {}
-
-    def item_name(iid):
-        if iid in db_c: return db_c[iid], "onaylı"
-        if iid in db_p: return db_p[iid], "tahmin"
-        return None, "bilinmeyen"
-
-    GREEN  = PatternFill("solid", fgColor="C6EFCE")
-    RED    = PatternFill("solid", fgColor="FFCCCC")
-    YELLOW = PatternFill("solid", fgColor="FFFACD")
-    BLUE   = PatternFill("solid", fgColor="CCEEFF")
-    BOLD   = Font(bold=True)
-
     wb = Workbook()
+    ws = wb.active
+    ws.title = "Birikim" if birikim_modu else "Pazar"
 
-    # ── SEKME 1: Tüm Kayıtlar ────────────────────────────────────
-    ws1 = wb.active
-    ws1.title = "Pazar Kayıtları"
-    if birikim_modu:
-        ws1.title = "Pazar Kayıtları [BİRİKİM]"
-    hdrs = ["#","Satıcı","Item ID","Item Adı","Adet","Fiyat","Durum"]
-    ws1.append(hdrs)
-    for c in ws1[1]: c.font = BOLD
-    for ri, rec in enumerate(sorted(records, key=lambda x: x["price"], reverse=True), 1):
-        nm, durum = item_name(rec["item_id"])
-        fill = GREEN if durum == "onaylı" else (RED if durum == "tahmin" else YELLOW)
-        row = [ri, rec["seller"], rec["item_id"], nm or "?", rec["qty"], rec["price"], durum]
-        ws1.append(row)
-        for c in ws1[ri+1]: c.fill = fill
+    hf = PatternFill("solid", fgColor="1F4E79")
+    cf = PatternFill("solid", fgColor="1D4E2A")
+    pf = PatternFill("solid", fgColor="4A2D00")
+    uf = PatternFill("solid", fgColor="3A1010")
+    af = PatternFill("solid", fgColor="2C2C2C")
 
-    # ── SEKME 2: Bilinmeyen ID'ler ───────────────────────────────
-    ws2 = wb.create_sheet("❓ Bilinmeyen ID'ler")
-    ws2.append(["Item ID","Kaç Satıcıda","Satıcılar"])
-    for c in ws2[1]: c.font = BOLD
-    unk = defaultdict(list)
-    for r in records:
-        nm, d = item_name(r["item_id"])
-        if d == "bilinmeyen":
-            unk[r["item_id"]].append(r["seller"])
-    for iid, sellers in sorted(unk.items(), key=lambda x: -len(x[1])):
-        ws2.append([iid, len(sellers), ", ".join(sellers[:5])])
+    for ci, h in enumerate(["Satici", "Item ID", "Item Adi", "Durum", "Fiyat"], 1):
+        c = ws.cell(row=1, column=ci, value=h)
+        c.fill = hf; c.font = Font(bold=True, color="FFFFFF")
+        c.alignment = Alignment(horizontal="center")
 
-    # ── SEKME 3: Satıcı Bazlı ────────────────────────────────────
-    ws3 = wb.create_sheet("Aynı Satıcının Pazarı")
-    ws3.append(["Satıcı","Item ID","Item Adı","Adet","Fiyat","Durum"])
-    for c in ws3[1]: c.font = BOLD
-    by_s = defaultdict(list)
-    for r in records: by_s[r["seller"]].append(r)
+    for ri, r in enumerate(records, 2):
+        iid  = r["item_id"]
+        name = db_c.get(iid) or db_p.get(iid, "")
+        if   iid in db_c: status, fill = "Onaylı", cf
+        elif iid in db_p: status, fill = "Tahmin", pf
+        else:             status, fill = "?", uf
+        for ci, val in enumerate([r["seller"], iid, name, status, r["price"]], 1):
+            c = ws.cell(row=ri, column=ci, value=val)
+            c.fill = fill; c.font = Font(color="FFFFFF")
 
-    hedef_row = None
-    ri = 2
-    for seller in sorted(by_s.keys()):
-        is_hedef = HEDEF_OYUNCU and seller.lower() == HEDEF_OYUNCU.lower()
-        for it in sorted(by_s[seller], key=lambda x: x["price"], reverse=True):
-            iid = it["item_id"]
-            nm, durum = item_name(iid)
-            fill = BLUE if is_hedef else (GREEN if durum=="onaylı" else (RED if durum=="tahmin" else None))
-            row = [seller, iid, nm or "?", it["qty"], it["price"], durum]
-            ws3.append(row)
-            if fill:
-                for c in ws3[ri]: c.fill = fill
-            if is_hedef and hedef_row is None:
-                hedef_row = ri
-            ri += 1
+    for ci, w in enumerate([20, 14, 35, 12, 16], 1):
+        ws.column_dimensions[ws.cell(row=1, column=ci).column_letter].width = w
 
-    # ── SEKME 4: ID Frekans ──────────────────────────────────────
-    ws4 = wb.create_sheet("ID Frekans")
-    ws4.append(["Item ID","Item Adı","Satıcı Sayısı","Min Fiyat","Max Fiyat","Durum"])
-    for c in ws4[1]: c.font = BOLD
-    freq = defaultdict(list)
-    for r in records: freq[r["item_id"]].append(r["price"])
-    for iid, prices in sorted(freq.items(), key=lambda x: -len(x[1])):
-        nm, durum = item_name(iid)
-        ws4.append([iid, nm or "?", len(prices), min(prices), max(prices), durum])
-
-    # Kolon genişlikleri
-    for ws in [ws1, ws2, ws3, ws4]:
-        for col in ws.columns:
-            ws.column_dimensions[col[0].column_letter].width = 22
-
+    path = EXCEL_OUT.replace("pazar_analiz", "pazar_birikim") if birikim_modu else EXCEL_OUT
     try:
-        wb.save(EXCEL_OUT)
-        log(f"Excel kaydedildi: {EXCEL_OUT}")
-        if hedef_row:
-            log(f"  ★ HEDEF OYUNCU '{HEDEF_OYUNCU}' Excel satır {hedef_row}'de! (Satıcı Bazlı sekmesi)")
-        os.startfile(EXCEL_OUT)
+        wb.save(path)
+        log(f"  Excel: {path}")
     except Exception as e:
-        log(f"Excel kaydetme hatası: {e}")
-
-
-def hedef_uyari(seller_name):
-    """Hedef oyuncu bulununca sesli + popup uyarı."""
-    log(f"")
-    log(f"  ╔══════════════════════════════════════╗")
-    log(f"  ║  ★ HEDEF OYUNCU BULUNDU!             ║")
-    log(f"  ║  {seller_name:<36} ║")
-    log(f"  ╚══════════════════════════════════════╝")
-    log(f"")
-    try:
-        import winsound
-        for _ in range(5):
-            winsound.Beep(1500, 300)
-            time.sleep(0.2)
-    except:
-        pass
-    try:
-        import ctypes
-        ctypes.windll.user32.MessageBoxW(
-            0,
-            f"★ {seller_name} pazar listesinde görüldü!\\n\\nExcel açılıyor...",
-            "HEDEF BULUNDU",
-            0x40
-        )
-    except:
-        pass
+        log(f"  Excel hata: {e}")
 
 
 def main():
-    log("NOWA Pazar Dinleme v2 - Çoklu Sunucu + Birikimli Mod")
-    log(f"  IP Filtresi: KAPALI (tüm TCP - iOS uyumlu)")
-    if HEDEF_OYUNCU:
-        log(f"  Hedef oyuncu: {HEDEF_OYUNCU}")
+    log("NOWA Pazar Dinleme v3")
+
+    try:
+        import subprocess as _sp
+        _sp.run([ADB, "connect", ADB_SERIAL], capture_output=True, timeout=5)
+        r = _sp.run([ADB, "devices"], capture_output=True, timeout=10)
+        out = r.stdout.decode("utf-8", errors="ignore")
+        lines = [l for l in out.splitlines() if l.strip() and "List of" not in l and "offline" not in l]
+        if lines: log(f"  ADB: {lines[0]}")
+        else: log("  ADB bagli degil! LDPlayer acik mi?")
+    except Exception as e:
+        log(f"  ADB hata: {e}")
 
     confirmed, predicted = load_id_db()
     birikim = load_birikim()
-
-    log(f"  Mevcut birikim: {len(birikim['records'])} kayıt, {birikim['scan_count']} tarama")
+    log(f"  {len(confirmed)} onaylı ID")
+    log(f"  Birikim: {birikim['scan_count']} tarama")
     log("")
-    log("Komutlar:")
-    log("  Enter     → Yeni tarama başlat")
-    log("  b         → Birikimli Excel üret (şimdiye kadar toplanan)")
-    log("  s         → Birikimi sıfırla")
-    log("  q         → Çık")
+    log("Enter=Yeni tarama  b=Birikim Excel  s=Sifirla  q=Cik")
     log("")
 
     while True:
         try:
-            cmd = input("Komut (Enter/b/s/q): ").strip().lower()
+            cmd = input("Komut: ").strip().lower()
 
             if cmd == "q":
                 break
-
             elif cmd == "b":
-                # Birikimli Excel üret
-                if not birikim["records"]:
-                    log("Birikim boş.")
-                    continue
-                log(f"Birikimli Excel üretiliyor: {len(birikim['records'])} kayıt, {len(birikim['sellers'])} satıcı...")
+                if not birikim["records"]: log("Birikim bos."); continue
                 save_excel(birikim["records"], confirmed, predicted, birikim_modu=True)
                 if HEDEF_OYUNCU in birikim.get("sellers", {}):
-                    log(f"  ★ Hedef '{HEDEF_OYUNCU}' birikimde {birikim['sellers'][HEDEF_OYUNCU]} itemle görülmüş!")
+                    log(f"  HEDEF '{HEDEF_OYUNCU}': {birikim['sellers'][HEDEF_OYUNCU]} item")
                 continue
-
             elif cmd == "s":
-                onay = input("Birikimi sıfırla? (evet/hayır): ").strip().lower()
-                if onay == "evet":
-                    birikim = {"records": [], "sellers": {}, "scan_count": 0, "hedef_bulundu": False}
-                    save_birikim(birikim)
-                    log("Birikim sıfırlandı.")
+                if input("Sifirla? (evet): ").strip().lower() == "evet":
+                    birikim = {"records": [], "sellers": {}, "scan_count": 0}
+                    save_birikim(birikim); log("Birikim sifirlandi.")
                 continue
 
-            # Yeni tarama (Enter)
-            log("Perşömeni açmaya hazırlan...")
-            log("tcpdump başlatılıyor...")
+            log("tcpdump baslatiliyor...")
             start_tcpdump()
+            log("SIMDI: Pazar persomenini AC, kapat")
 
-            log("ŞİMDİ: Pazar perşömenini AÇ → yukarıdan aşağıya kaydır → KAPAT")
-
-            # Perşömen açılana kadar bekle (büyüme takibi)
             prev_size = 0
-            burst_detected = False
-            burst_end_time = None
-            BURST_THRESHOLD = 15 * 1024  # 15KB/sn
+            wait_sec  = 0
+            BURST_TH  = 15 * 1024
 
             while True:
                 time.sleep(1)
-                cur_size = get_pcap_size()
-                delta = cur_size - prev_size
-                prev_size = cur_size
+                wait_sec += 1
+                cur  = get_pcap_size()
+                diff = cur - prev_size
+                prev_size = cur
 
-                if delta > BURST_THRESHOLD and not burst_detected:
-                    log(f"  ▶ Pazar verisi geliyor! ({delta//1024}KB/sn)")
-                    burst_detected = True
+                if wait_sec % 10 == 0:
+                    log(f"  Bekleniyor... {wait_sec}sn, pcap: {cur} byte")
 
-                if burst_detected:
-                    if delta < 2000:  # Yavaşladı
-                        if burst_end_time is None:
-                            burst_end_time = time.time()
-                        elif time.time() - burst_end_time > 3:
-                            log("  ✓ Veri tamamlandı. Analiz başlıyor...")
-                            break
-                    else:
-                        burst_end_time = None
+                if diff >= BURST_TH:
+                    log(f"  Veri geldi! ({diff//1024}KB/sn) — 5sn bekleniyor...")
+                    time.sleep(5)
+                    log("  Analiz basliyor...")
+                    break
 
-                # Timeout: 120 sn perşömen açılmadıysa
-                if not burst_detected and prev_size > 0:
-                    pass  # Bekle
+                if wait_sec >= 120:
+                    log("  120sn gecti, veri gelmedi.")
+                    stop_tcpdump(); break
 
-            # PCAP çek ve analiz et
             if not pull_pcap():
-                log("PCAP çekme başarısız!")
-                continue
+                log("PCAP cekme basarisiz!"); continue
 
-            packets  = read_packets(LOCAL_PCAP)
-            payload  = extract_payloads(packets)
-            records  = parse_records(payload)
+            pkts    = read_packets(LOCAL_PCAP)
+            payload = extract_payloads(pkts)
+            recs    = parse_records(payload)
+            log(f"  {len(recs)} kayit / {len(set(r['seller'] for r in recs))} satici")
 
-            sellers  = len(set(r["seller"] for r in records))
-            log(f"  {len(records)} kayıt / {sellers} satıcı bulundu")
+            if not recs:
+                log("  Kayit bulunamadi. Persomeni yavaş kaydır."); continue
 
-            if not records:
-                log("  Kayıt bulunamadı. Perşömeni daha yavaş kaydır.")
-                continue
+            added = merge_records(birikim, recs)
+            log(f"  Birikime {added} yeni kayit (toplam: {len(birikim['records'])})")
 
-            # Birikime ekle
-            added = merge_records(birikim, records)
-            log(f"  Birikime {added} yeni kayıt eklendi (toplam: {len(birikim['records'])})")
+            if HEDEF_OYUNCU:
+                for r in recs:
+                    if r["seller"].lower() == HEDEF_OYUNCU.lower():
+                        hedef_uyari(HEDEF_OYUNCU); break
+                if HEDEF_OYUNCU in birikim.get("sellers", {}):
+                    log(f"  HEDEF '{HEDEF_OYUNCU}': {birikim['sellers'][HEDEF_OYUNCU]} item")
 
-            # Hedef oyuncu kontrolü
-            hedef_bu_taramada = check_hedef(records, birikim)
-            if hedef_bu_taramada and not birikim.get("hedef_bulundu"):
-                birikim["hedef_bulundu"] = True
-                hedef_uyari(HEDEF_OYUNCU)
-
-            if HEDEF_OYUNCU and HEDEF_OYUNCU in birikim.get("sellers", {}):
-                log(f"  ★ '{HEDEF_OYUNCU}' şu ana kadar {birikim['sellers'][HEDEF_OYUNCU]} itemle görüldü")
-
-            # Birikimi kaydet
             save_birikim(birikim)
-
-            # Bu taramanın Excel'ini üret
-            log("Bu taramanın Excel'i üretiliyor...")
-            save_excel(records, confirmed, predicted)
-
-            log(f"Toplam birikim: {birikim['scan_count']} tarama, {len(birikim['sellers'])} farklı satıcı")
-            log("Birikimli Excel için 'b' komutunu kullan")
+            save_excel(recs, confirmed, predicted)
 
         except KeyboardInterrupt:
             break
         except Exception as e:
             log(f"Hata: {e}")
             import traceback; traceback.print_exc()
-            time.sleep(3)
+            time.sleep(2)
 
     stop_tcpdump()
     log("Bitti.")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+    input("Kapatmak icin Enter...")
 `;
   const blob = new Blob([script], { type: 'text/plain' });
   const a = document.createElement('a');
@@ -1742,7 +1633,8 @@ def parse_market_records(data):
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            if 10_000 <= price <= 9_999_999_999:
+            zeros   = data[j+13:j+20]
+            if 10_000 <= price <= 9_990_000_000 and zeros == b"\\x00" * 7:
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
