@@ -1387,7 +1387,7 @@ def main():
 
                 if diff >= BURST_TH:
                     log(f"  Veri geldi! ({diff//1024}KB/sn) — 5sn bekleniyor...")
-                    time.sleep(5)
+                    time.sleep(8)
                     log("  Analiz basliyor...")
                     break
 
@@ -1788,7 +1788,7 @@ def main():
     # - Pazar verisi: persomen acilinca ANI BURST gelir (>20KB/sn)
     # - Burst bittikten 3sn sonra analiz et, bir onceki analiz noktasindan itibaren
     BURST_THRESHOLD  = 15_000   # 1 saniyede bu kadar bytetan fazla gelirse = pazar burstu
-    BURST_END_SECS   = 3        # Burst sonrasi bu kadar saniye bekliyince analiz et
+    BURST_END_SECS   = 8        # Burst sonrasi bu kadar saniye bekliyince analiz et
 
     try:
         while True:
