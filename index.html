@@ -1252,9 +1252,7 @@ def parse_records(data):
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            trail   = data[j+13:j+20]
-            valid   = trail[-1] in (0x00, 0x04) if len(trail) == 7 else False
-            if 1_000 <= price <= 9_999_999_999 and valid:
+            if 1_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
@@ -1643,9 +1641,7 @@ def parse_market_records(data):
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            trail   = data[j+13:j+20]
-            valid   = trail[-1] in (0x00, 0x04) if len(trail) == 7 else False
-            if 10_000 <= price <= 9_999_999_999 and valid:
+            if 10_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
