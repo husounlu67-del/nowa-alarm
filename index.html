@@ -1619,17 +1619,25 @@ def extract_server_payloads(packets):
 
 def parse_market_records(data):
     records, seen, n, i = [], set(), len(data), 0
-    while i < n - 40:
-        if not (data[i]==0x00 and data[i+1]==0x00 and 3<=data[i+2]<=35 and data[i+3]==0x00):
+    while i < n - 22:
+        if data[i] == 0xaa and i + 1 < n and data[i+1] == 0x55:
+            i += 2; continue
+        if i + 2 > n: break
+        name_len = struct.unpack("<H", data[i:i+2])[0]
+        if not (2 <= name_len <= 25):
             i += 1; continue
-        name_len = data[i+2]
-        name_start = i + 4
+        name_start = i + 2
         name_end   = name_start + name_len * 2
-        if name_end + 21 > n: i += 1; continue
-        try:    name = data[name_start:name_end].decode("utf-16-le")
-        except: i += 1; continue
-        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 3): i += 1; continue
+        if name_end + 20 > n:
+            i += 1; continue
+        try:
+            name = data[name_start:name_end].decode("utf-16-le")
+        except:
+            i += 1; continue
+        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
+            i += 1; continue
         j = name_end
+        item_count = 0
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
@@ -1638,9 +1646,14 @@ def parse_market_records(data):
                 if key not in seen:
                     seen.add(key)
                     records.append({"seller": name, "item_id": item_id, "price": price})
-                j += 20; continue
-            break
-        i += 1
+                item_count += 1
+                j += 20
+            else:
+                break
+        if item_count > 0:
+            i = j
+        else:
+            i += 1
     return records
 
 def check_alarms(records):
