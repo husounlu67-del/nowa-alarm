@@ -57,7 +57,7 @@ header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
 .search-wrap input::placeholder{color:var(--text3);}
 .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px;}
 
-/* ── KATEGORİ SEKMELERİ ── */
+/* ── KATEGORİ SEKMELERİ (üstte buton) ── */
 .cat-tabs{display:flex;align-items:center;gap:0;padding:0 20px;
   border-bottom:1px solid var(--border);background:rgba(5,8,12,.4);}
 .cat-tab{display:flex;align-items:center;gap:7px;padding:11px 20px;cursor:pointer;
@@ -203,7 +203,7 @@ tbody td{padding:0;vertical-align:middle;}
   align-items:center;justify-content:center;backdrop-filter:blur(5px);}
 .ov.open{display:flex;}
 .modal{background:#0d1520;border:1px solid var(--border2);border-radius:10px;
-  padding:24px 28px;width:480px;box-shadow:0 20px 60px rgba(0,0,0,.7);animation:mi .2s ease;}
+  padding:24px 28px;width:460px;box-shadow:0 20px 60px rgba(0,0,0,.7);animation:mi .2s ease;}
 @keyframes mi{from{transform:scale(.95);opacity:0;}to{transform:scale(1);opacity:1;}}
 .modal-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
   letter-spacing:2px;color:var(--accent);margin-bottom:18px;}
@@ -214,25 +214,6 @@ tbody td{padding:0;vertical-align:middle;}
 .fi:focus,.fs:focus{border-color:var(--accent);}
 .fs option{background:#0d1520;}
 .fhint{font-size:10px;color:var(--text3);margin-top:3px;}
-
-/* Tip seçim butonları */
-.type-btns{display:flex;gap:6px;flex-wrap:wrap;}
-.type-btn{flex:1;min-width:120px;padding:8px 10px;border-radius:6px;cursor:pointer;
-  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;
-  border:1px solid var(--border2);background:rgba(0,0,0,.3);color:var(--text2);
-  transition:all .15s;text-align:center;}
-.type-btn:hover{border-color:var(--accent);color:var(--accent);}
-.type-btn.active{border-color:var(--accent);background:rgba(0,200,255,.12);color:var(--accent);
-  box-shadow:0 0 8px rgba(0,200,255,.2);}
-.type-btn.type-unique.active{border-color:var(--orange);background:rgba(255,107,53,.12);color:var(--orange);}
-.type-btn.type-taki.active{border-color:#f59e0b;background:rgba(245,158,11,.12);color:#f59e0b;}
-.type-btn.type-kutu.active{border-color:#10b981;background:rgba(16,185,129,.12);color:#10b981;}
-
-/* Preview seviyeleri */
-.level-preview{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
-.lv-prev{font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 8px;
-  border-radius:4px;border:1px solid var(--border2);color:var(--text3);background:rgba(0,0,0,.2);}
-
 .mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
 
 /* ── ID EKLEME ── */
@@ -248,6 +229,7 @@ tbody td{padding:0;vertical-align:middle;}
 .id-add-btn:hover{background:rgba(0,230,118,.2);}
 .id-del{font-size:9px;color:var(--red);cursor:pointer;margin-left:2px;opacity:.6;}
 .id-del:hover{opacity:1;}
+/* copy toast */
 #ctxt{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;
   background:var(--panel);border:1px solid var(--accent);border-radius:6px;
   padding:7px 14px;font-size:11px;color:var(--accent);font-family:'Share Tech Mono',monospace;
@@ -334,50 +316,31 @@ tbody td{padding:0;vertical-align:middle;}
   </div>
 </div>
 
-<!-- ── YENİ MODAL ── -->
+<!-- MODAL -->
 <div class="ov" id="add-modal">
   <div class="modal">
     <div class="modal-title">＋ YENİ ITEM EKLE</div>
-
-    <!-- 1. ADIM: KATEGORİ -->
-    <div class="fg">
-      <label class="fl">Kategori Seç *</label>
-      <select class="fs" id="m-cat" onchange="onCatChange()"></select>
+    <div class="fg"><label class="fl">Item Adı *</label><input class="fi" id="m-name" type="text" placeholder="örn: Reaper"></div>
+    <div class="fg"><label class="fl">Kategori</label>
+      <select class="fs" id="m-cat">
+        <option value="unique_silah">⚔ Unique Items</option>
+        <option value="normal_silah">🗡 Normal Silah</option>
+        
+      </select>
     </div>
-
-    <!-- 2. ADIM: TİP -->
-    <div class="fg" id="fg-type">
-      <label class="fl">Item Tipi *</label>
-      <div class="type-btns" id="type-btns"></div>
-      <div class="fhint" id="type-hint" style="margin-top:8px;"></div>
+    <div class="fg"><label class="fl">Unique mi?</label>
+      <select class="fs" id="m-unique">
+        <option value="true">Evet (Unique — +0'dan başlar)</option>
+        <option value="false">Hayır (Normal — +1'den başlar)</option>
+      </select>
     </div>
-
-    <!-- 3. ADIM: İSİM -->
-    <div class="fg">
-      <label class="fl">Item Adı *</label>
-      <input class="fi" id="m-name" type="text" placeholder="örn: Reaper">
-    </div>
-
-    <!-- Özel seviyeler (sadece Normal/Unique için göster) -->
-    <div class="fg" id="fg-levels" style="display:none;">
-      <label class="fl">Seviyeler (virgülle)</label>
+    <div class="fg"><label class="fl">Seviyeler (virgülle) *</label>
       <input class="fi" id="m-levels" type="text" placeholder="örn: +0, +5, +6, +7, Reb+1">
-      <div class="fhint">Boş bırakırsan seçilen tipe göre otomatik doldurulur.</div>
     </div>
-
-    <!-- Seviye önizleme -->
-    <div class="fg" id="fg-preview">
-      <label class="fl">Eklenecek Seviyeler</label>
-      <div class="level-preview" id="level-preview"></div>
-    </div>
-
-    <!-- ID -->
-    <div class="fg">
-      <label class="fl">Item ID'ler (virgülle, opsiyonel)</label>
+    <div class="fg"><label class="fl">Item ID'ler (virgülle)</label>
       <input class="fi" id="m-ids" type="text" placeholder="örn: 55934f09, 56934f09">
       <div class="fhint">Boş bırakılabilir. Tüm seviyelere aynı ID uygulanır.</div>
     </div>
-
     <div class="mbtns">
       <button class="btn btn-sec" onclick="closeModal()">İptal</button>
       <button class="btn btn-primary" onclick="addItem()">Ekle</button>
@@ -393,169 +356,13 @@ tbody td{padding:0;vertical-align:middle;}
 const CONFIRMED_IDS = new Set();
 
 const CAT_DATA = 
-[{"id":"unique_silah","name":"⚔ Unique Items","color":"#ff6b35","items":[{"name":"Hope's Frozen Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Iceberg Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Katana Sword","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]}]},{"id":"normal_silah","name":"🗡 Normal Silahlar","color":"#00c8ff","items":[{"name":"Shade Dagger","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Reaper","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]}]},{"id":"taki","name":"💍 Takılar","color":"#f59e0b","items":[{"name":"Master Warrior Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]}]},{"id":"warrior_zirh","name":"⚔ Warrior Zırhlar","color":"#ef4444","items":[]},{"id":"rogue_zirh","name":"🗡 Rogue Zırhlar","color":"#8b5cf6","items":[]},{"id":"priest_zirh","name":"✨ Priest Zırhlar","color":"#f59e0b","items":[]},{"id":"mage_zirh","name":"🔮 Mage Zırhlar","color":"#06b6d4","items":[]},{"id":"kutu_gem","name":"📦 Kutu-Gem-Pus","color":"#10b981","items":[{"name":"SKILL QUEST","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Low Mastery CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]}]}];
-
-// ── ITEM TİP TANIMLAMALARI ───────────────────────────────────────
-// Her kategori için hangi tip seçenekleri gösterilecek ve otomatik seviyeler
-const CAT_TYPE_CONFIG = {
-  // unique_silah: unique (+0..+8, Reb+1..5) veya normal (+1..+8, Reb+1..5)
-  unique_silah: {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: 'Seviyeler: +0, +1 ... +8, Reb+1 ... Reb+5', cls: 'type-unique',
-        autoLevels: ['+0','+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal', desc: 'Seviyeler: +1, +2 ... +8, Reb+1 ... Reb+5', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: false },
-    ],
-    showCustomLevels: true,
-  },
-  normal_silah: {
-    types: [
-      { id: 'normal', label: '✦ Normal', desc: 'Seviyeler: +1, +2 ... +8, Reb+1 ... Reb+5', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: false },
-    ],
-    showCustomLevels: true,
-  },
-  taki: {
-    types: [
-      { id: 'taki', label: '💍 Takı', desc: 'Seviyeler: Old, +0, +1, +2, +3', cls: 'type-taki',
-        autoLevels: ['Old','+0','+1','+2','+3'],
-        isUnique: false },
-    ],
-    showCustomLevels: false,
-  },
-  warrior_zirh: {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: 'Seviyeler: +1 ... +8, Reb+1 ... Reb+5', cls: 'type-unique',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal (+9)', desc: 'Seviyeler: +1 ... +9', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','+9'],
-        isUnique: true },
-    ],
-    showCustomLevels: true,
-  },
-  rogue_zirh: {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: 'Seviyeler: +1 ... +8, Reb+1 ... Reb+5', cls: 'type-unique',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal (+9)', desc: 'Seviyeler: +1 ... +9', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','+9'],
-        isUnique: true },
-    ],
-    showCustomLevels: true,
-  },
-  priest_zirh: {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: 'Seviyeler: +1 ... +8, Reb+1 ... Reb+5', cls: 'type-unique',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal (+9)', desc: 'Seviyeler: +1 ... +9', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','+9'],
-        isUnique: true },
-    ],
-    showCustomLevels: true,
-  },
-  mage_zirh: {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: 'Seviyeler: +1 ... +8, Reb+1 ... Reb+5', cls: 'type-unique',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal (+9)', desc: 'Seviyeler: +1 ... +9', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','+9'],
-        isUnique: true },
-    ],
-    showCustomLevels: true,
-  },
-  kutu_gem: {
-    types: [
-      { id: 'kutu', label: '📦 Kutu / Gem', desc: 'Tek seviye: +0', cls: 'type-kutu',
-        autoLevels: ['+0'],
-        isUnique: false },
-    ],
-    showCustomLevels: false,
-  },
-};
-
-// Bilinmeyen kategoriler için fallback
-function getCatTypeConfig(catId) {
-  return CAT_TYPE_CONFIG[catId] || {
-    types: [
-      { id: 'unique', label: '★ Unique', desc: '+0..+8, Reb+1..+5', cls: 'type-unique',
-        autoLevels: ['+0','+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: true },
-      { id: 'normal', label: '✦ Normal', desc: '+1..+8, Reb+1..+5', cls: '',
-        autoLevels: ['+1','+2','+3','+4','+5','+6','+7','+8','Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'],
-        isUnique: false },
-    ],
-    showCustomLevels: true,
-  };
-}
-
-// Seçili tip index'i
-let selectedTypeIdx = 0;
-
-function onCatChange() {
-  selectedTypeIdx = 0;
-  renderTypeButtons();
-  updateLevelPreview();
-}
-
-function renderTypeButtons() {
-  const catId = document.getElementById('m-cat').value;
-  const cfg = getCatTypeConfig(catId);
-  const container = document.getElementById('type-btns');
-
-  container.innerHTML = cfg.types.map((t, i) =>
-    `<button class="type-btn ${t.cls} ${i === selectedTypeIdx ? 'active' : ''}"
-      onclick="selectType(${i})">${t.label}</button>`
-  ).join('');
-
-  // Özel seviye input göster/gizle
-  document.getElementById('fg-levels').style.display = cfg.showCustomLevels ? '' : 'none';
-
-  // Hint
-  const hint = document.getElementById('type-hint');
-  hint.textContent = cfg.types[selectedTypeIdx]?.desc || '';
-}
-
-function selectType(idx) {
-  selectedTypeIdx = idx;
-  renderTypeButtons();
-  updateLevelPreview();
-}
-
-function getEffectiveLevels() {
-  const catId = document.getElementById('m-cat').value;
-  const cfg = getCatTypeConfig(catId);
-  const typeObj = cfg.types[selectedTypeIdx];
-
-  // Eğer özel seviyeler varsa ve gösteriliyorsa, kullan
-  if (cfg.showCustomLevels) {
-    const customVal = document.getElementById('m-levels').value.trim();
-    if (customVal) {
-      return customVal.split(',').map(s => s.trim()).filter(Boolean);
-    }
-  }
-  return typeObj ? [...typeObj.autoLevels] : ['+0'];
-}
-
-function updateLevelPreview() {
-  const levels = getEffectiveLevels();
-  const preview = document.getElementById('level-preview');
-  preview.innerHTML = levels.map(lv =>
-    `<span class="lv-prev">${lv}</span>`
-  ).join('');
-}
+[{"id":"unique_silah","name":"⚔ Unique Items","color":"#ff6b35","items":[{"name":"Hope's Frozen Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Iceberg Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Katana Sword","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Fireguard Hammer","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Cold Dagger","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Light Storm Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Arcane Bow","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Hell Strike","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"HellFire Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Wrath's Spear","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Hope's Fire Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Dark Shadow Dagger","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Starlight Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Dragon Wing Bow","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Hope's Thunder Staff","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Thunder Animor","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Firelance","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Frozendeath Dagger","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Frozen Cross Bow","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Hailstorm Aegis","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Gaze of Icedeath","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Gaze of Firedeath","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Gaze of Thunderdeath","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"King Axe","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"HellFire Bow","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Venom Hammer","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Claw Hammer","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Nightfang Hammer","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"HellFire","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Lord's Sentinel Shield","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Phantom Shield","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Venom Shield","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Legendary Shield","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Frozen Axe","unique":true,"levels":[{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]}]},{"id":"normal_silah","name":"🗡 Normal Silahlar","color":"#00c8ff","items":[{"name":"Shade Dagger","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Reaper","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Thunder Impact","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"IronShade Bow","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Bloody Dagger","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Phantom Sword","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Giant Reaper","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Giant Thunder Impact","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Giant Phantom Sword","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Giant IronShade Bow","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Giant Shade Dagger","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Bloody Bow","unique":false,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]}]},{"id":"taki","name":"💍 Takılar","color":"#f59e0b","items":[{"name":"Master Warrior Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Rogue Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Mage Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Priest Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Courage Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Hextech Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Belt of Health","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Belt Of Courage","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Belt Of Str","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Master Belt Of Dexterity","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Elarin Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Fire Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Frozen Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Thunder Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Essence Pendant","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Holy Pendant","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Courage Pendant","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Elderwood Belt","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Skull Belt","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Belt of STR","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Bronze Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Magic Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Elfen Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Sorcerer Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Berserker Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Courage Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Healers Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Shadow Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Shaman Silver Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Rogue Silver Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Hero Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Loyal Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Black Drake Neck","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Blue Drake Neck","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Amulet Of Evil","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Elder Necklace","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Amulet of Divinity","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Amulet Of Life","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Red Drake Neck","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Str Necklace","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"White Drake Neck","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Secret Power Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Elderwood Ring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Ring of Shadow","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Hero Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Ring Of Magic","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Belt of Dexterity","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]},{"name":"Star Earring","unique":false,"levels":[{"level":"Old","ids":[],"confirmed":false},{"level":"+0","ids":[],"confirmed":false},{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false}]}]},{"id":"warrior_zirh","name":"⚔ Warrior Zırhlar","color":"#ef4444","items":[{"name":"Warrior Holy Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Holy Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Holy Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Holy Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Holy Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Warrior Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]}]},{"id":"rogue_zirh","name":"🗡 Rogue Zırhlar","color":"#8b5cf6","items":[{"name":"Rogue Holy Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Holy Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Holy Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Holy Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Holy Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Rogue Full Guard Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Rogue Full Guard Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Rogue Full Guard Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Rogue Full Guard Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Rogue Full Guard Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]}]},{"id":"priest_zirh","name":"✨ Priest Zırhlar","color":"#f59e0b","items":[{"name":"Priest Holy Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Holy Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Holy Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Holy Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Holy Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Priest Half Guard Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Half Guard Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Half Guard Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Half Guard Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Half Guard Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Fabric Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Fabric Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Fabric Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Fabric Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Priest Fabric Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]}]},{"id":"mage_zirh","name":"🔮 Mage Zırhlar","color":"#06b6d4","items":[{"name":"Mage Holy Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Holy Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Holy Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Holy Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Holy Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Titan Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Titan Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Titan Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Titan Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Titan Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"Reb+1","ids":[],"confirmed":false},{"level":"Reb+2","ids":[],"confirmed":false},{"level":"Reb+3","ids":[],"confirmed":false},{"level":"Reb+4","ids":[],"confirmed":false},{"level":"Reb+5","ids":[],"confirmed":false}]},{"name":"Mage Half Guard Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Half Guard Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Half Guard Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Half Guard Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Half Guard Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Fabric Helmet","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Fabric Pauldron","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Fabric Pads","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Fabric Boots","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]},{"name":"Mage Fabric Gauntlets","unique":true,"levels":[{"level":"+1","ids":[],"confirmed":false},{"level":"+2","ids":[],"confirmed":false},{"level":"+3","ids":[],"confirmed":false},{"level":"+4","ids":[],"confirmed":false},{"level":"+5","ids":[],"confirmed":false},{"level":"+6","ids":[],"confirmed":false},{"level":"+7","ids":[],"confirmed":false},{"level":"+8","ids":[],"confirmed":false},{"level":"+9","ids":[],"confirmed":false}]}]},{"id":"kutu_gem","name":"📦 Kutu-Gem-Pus","color":"#10b981","items":[{"name":"SKILL QUEST","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Low Mastery CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Middle Mastery CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"High Mastery CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"NOWA BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Elder Armor Piece Box","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Diamond Box","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Red Chest","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Green Chest","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Blue Chest","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Blaze LWL 1","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Mirage LWL 2","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Thnder LWL 3","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Eclipse LWL 4","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Tempest LWL 5","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Aurora LWL 6","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Fragment of Obsidian LWL 7","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Silver Gem LWL 6","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Red Gem LWL 5","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Sunlight Gem LWL 4","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Blue Gem LWL 3","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Green Gem LVL 2","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Blue Spring Box","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Red Spring Box","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"High CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Low CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Middle CR BOX","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Eid Box","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Mystic Jewel","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Legendary Cape","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Full Premium","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Clan Premium","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Talisman","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Lucky Tried","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Storem Mp Pot","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Character Seal Scrool","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]},{"name":"Wings Voucher Coupon","unique":false,"levels":[{"level":"+0","ids":[],"confirmed":false}]}]}];
 
 // ── STATE ────────────────────────────────────────────────────────
-let prices = {};
-let learnedIDs = {};
-let customItems = {};
-let selLv = {};
+let prices = {};        // [catId][itemName][levelName] = {price, active}
+let learnedIDs = {};    // {item_id: "item ismi"} - kullanıcı tarafından öğretilen
+let customItems = {};   // [catId] = [{name,unique,levels}]
+let selLv = {};         // [catId|itemName] = levelIndex
 let activeCat = CAT_DATA[0].id;
 let filterText = '';
 
@@ -608,6 +415,7 @@ function switchCat(catId) {
 // ── UTILS ─────────────────────────────────────────────────────────
 function fmt(v) { if (!v && v !== 0) return ''; const n = parseInt(v.toString().replace(/\D/g, '')); return isNaN(n) ? '' : n.toLocaleString('tr-TR'); }
 function raw(v) { return v.toString().replace(/\D/g, ''); }
+
 function safeId(s) { return s.replace(/[^a-zA-Z0-9]/g, '_'); }
 
 function copyId(id) {
@@ -620,16 +428,20 @@ function copyId(id) {
 }
 
 // ── ID TAHMİN SİSTEMİ ─────────────────────────────────────────────
+
+// Seviye grupları
 const NORMAL_LEVELS = ['+0','+1','+2','+3','+4','+5','+6','+7','+8','+9'];
 const REB_LEVELS    = ['Reb+1','Reb+2','Reb+3','Reb+4','Reb+5'];
 
 function isNormalLevel(lv) { return NORMAL_LEVELS.includes(lv); }
 function isRebLevel(lv)    { return REB_LEVELS.includes(lv); }
 
+// ID'den base_id (son 6 hex) ve prefix (ilk 2 hex → decimal) çıkar
 function extractBase(id)   { return id.slice(2); }
 function extractPrefix(id) { return parseInt(id.slice(0,2), 16); }
 function toHex2(n)         { return ((n & 0xFF).toString(16).padStart(2,'0')); }
 
+// Bir item'ın seviye listesini döndür
 function getItemLevels(catId, itemName) {
   for (const cat of CAT_DATA) {
     if (cat.id !== catId) continue;
@@ -641,6 +453,8 @@ function getItemLevels(catId, itemName) {
   return [];
 }
 
+// Tüm CAT_DATA'da çakışan ID var mı?
+// skipCatId + skipItemName + skipLevel → o hücreyi atla (aynı hücreye ekleniyor)
 function checkIdConflict(newId, skipCatId, skipItemName, skipLevel) {
   for (const cat of CAT_DATA) {
     const allItems = [...cat.items, ...(customItems[cat.id]||[])];
@@ -656,20 +470,24 @@ function checkIdConflict(newId, skipCatId, skipItemName, skipLevel) {
   return null;
 }
 
+// Onaylı bir ID'den aynı base_id'ye sahip tüm TAHMİN ID'lerini sil
+// (onaylı olanlar korunur)
 function clearPredictionsFromId(confirmedId, catId, itemName) {
   const base   = extractBase(confirmedId);
   const levels = getItemLevels(catId, itemName);
   for (const lv of levels) {
     lv.ids = lv.ids.filter(id => {
-      if (extractBase(id) !== base) return true;
-      if (CONFIRMED_IDS.has(id))   return true;
+      if (extractBase(id) !== base) return true;  // farklı base → dokunma
+      if (CONFIRMED_IDS.has(id))   return true;  // başka onaylı → dokunma
       delete learnedIDs[id];
-      return false;
+      return false; // aynı base, onaysız → sil
     });
     if (lv.ids.length === 0) lv.confirmed = false;
   }
 }
 
+// Onaylı ID'den aynı grubun diğer seviyelerine tahmin üret
+// Kural: Normal → sadece normal seviyelere, Reb → sadece reb seviyelerine
 function predictFromConfirmed(confirmedId, confirmedLevel, catId, itemName) {
   const base   = extractBase(confirmedId);
   const prefix = extractPrefix(confirmedId);
@@ -677,7 +495,7 @@ function predictFromConfirmed(confirmedId, confirmedLevel, catId, itemName) {
 
   const isNorm = isNormalLevel(confirmedLevel);
   const isReb  = isRebLevel(confirmedLevel);
-  if (!isNorm && !isReb) return;
+  if (!isNorm && !isReb) return; // Old vb. → tahmin yok
 
   const group  = isNorm ? NORMAL_LEVELS : REB_LEVELS;
   const myIdx  = group.indexOf(confirmedLevel);
@@ -686,13 +504,14 @@ function predictFromConfirmed(confirmedId, confirmedLevel, catId, itemName) {
   const itemLevelNames = levels.map(l => l.level);
 
   for (let i = 0; i < group.length; i++) {
-    if (i === myIdx) continue;
+    if (i === myIdx) continue; // kendisi → atla
     const targetLevel = group[i];
-    if (!itemLevelNames.includes(targetLevel)) continue;
+    if (!itemLevelNames.includes(targetLevel)) continue; // bu item'da yok → atla
 
     const diff     = i - myIdx;
     const newId    = toHex2(prefix + diff) + base;
 
+    // Başka bir item/seviyede çakışma var mı?
     const conflict = checkIdConflict(newId, catId, itemName, targetLevel);
     if (conflict) {
       toast('w', '⚠ Tahmin Çakışması',
@@ -704,10 +523,12 @@ function predictFromConfirmed(confirmedId, confirmedLevel, catId, itemName) {
     if (!lvObj) continue;
     if (!lvObj.ids.includes(newId)) {
       lvObj.ids.push(newId);
+      // confirmed=false olduğundan kırmızı görünecek
     }
   }
 }
 
+// ── addLearnedId ─────────────────────────────────────────────────
 function addLearnedId(rawId, catId, itemName, levelName, inputElId) {
   const id = rawId.trim().toLowerCase();
   if (!id) return;
@@ -716,6 +537,7 @@ function addLearnedId(rawId, catId, itemName, levelName, inputElId) {
     return;
   }
 
+  // 1. Çakışma kontrolü
   const conflict = checkIdConflict(id, catId, itemName, levelName);
   if (conflict) {
     toast('e', '⚠ ID Çakışması',
@@ -723,6 +545,7 @@ function addLearnedId(rawId, catId, itemName, levelName, inputElId) {
     return;
   }
 
+  // 2. İlgili seviyeye onaylı olarak ekle
   const levels = getItemLevels(catId, itemName);
   for (const lv of levels) {
     if (lv.level !== levelName) continue;
@@ -731,11 +554,14 @@ function addLearnedId(rawId, catId, itemName, levelName, inputElId) {
     break;
   }
 
+  // 3. Kayıt
   learnedIDs[id] = `${itemName} ${levelName}`;
   CONFIRMED_IDS.add(id);
 
+  // 4. Tahmin üret
   predictFromConfirmed(id, levelName, catId, itemName);
 
+  // 5. Temizle ve güncelle
   const inp = document.getElementById(inputElId);
   if (inp) inp.value = '';
   save();
@@ -744,9 +570,11 @@ function addLearnedId(rawId, catId, itemName, levelName, inputElId) {
   toast('s', 'ID Eklendi ✓', `${id} → ${itemName} ${levelName}`);
 }
 
+// ── removeCatId (chip üzerindeki ✕ butonu) ───────────────────────
 function removeCatId(id, catId, itemName, levelName) {
   const wasConfirmed = CONFIRMED_IDS.has(id);
 
+  // ID'yi ilgili seviyeden kaldır
   const levels = getItemLevels(catId, itemName);
   for (const lv of levels) {
     if (lv.level !== levelName) continue;
@@ -757,6 +585,7 @@ function removeCatId(id, catId, itemName, levelName) {
   if (id in learnedIDs) delete learnedIDs[id];
   CONFIRMED_IDS.delete(id);
 
+  // Onaylıysa → bu base_id'den üretilen tahminleri de sil
   if (wasConfirmed) {
     clearPredictionsFromId(id, catId, itemName);
     toast('w', 'Onaylı ID + Tahminler Silindi', id);
@@ -767,9 +596,12 @@ function removeCatId(id, catId, itemName, levelName) {
   renderTable();
 }
 
+// ── removeLearnedId (eski uyumluluk için — removeCatId'ye yönlendir) ──
 function removeLearnedId(id, catId, itemName, levelName) {
   removeCatId(id, catId, itemName, levelName);
 }
+
+
 
 function downloadIdJson() {
   const confirmed = {}, predicted = {};
@@ -819,10 +651,13 @@ function renderRow(item, idx, cat) {
   const selIdx = selLv[key] ?? 0;
   const lvPrices = prices[activeCat]?.[item.name] || {};
   const activeCnt = Object.values(lvPrices).filter(p => p.active).length;
+  const hasPriceCnt = Object.values(lvPrices).filter(p => p.price !== '').length;
 
+  // Badge
   const catBadge = item.unique ? 'badge-u' : 'badge-n';
   const catLabel = item.unique ? '★ Unique' : '✦ Normal';
 
+  // Seviye butonları
   const lvBtns = item.levels.map((lv, i) => {
     const pd = lvPrices[lv.level];
     const hasPr = pd?.price && pd.price !== '';
@@ -836,6 +671,7 @@ function renderRow(item, idx, cat) {
       <span class="lv-dot"></span>${lv.level}${mini}</button>`;
   }).join('');
 
+  // Seçili seviye fiyat paneli
   const selLvData = item.levels[selIdx];
   let pricePanel = '';
   if (selLvData) {
@@ -883,6 +719,7 @@ function renderRow(item, idx, cat) {
     </div>`;
   }
 
+  // Durum badge
   const nm2 = item.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   const stBadge = activeCnt > 0
     ? `<span class="st st-on" onclick="toggleActive('${activeCat}','${nm2}',event)"><span class="st-d"></span>${activeCnt} Aktif</span>`
@@ -947,6 +784,7 @@ function saveP(catId, itemName, levelName, val, iid) {
   renderTable();
   if (r) toast('s', 'Kaydedildi', `${itemName} ${levelName} → ${parseInt(r).toLocaleString('tr-TR')} gold`);
 
+  // Otomatik sonraki seviyeye geç
   if (r) {
     const items = getAllItemsInCat(catId);
     const item = items.find(i => i.name === itemName);
@@ -991,6 +829,7 @@ function toggleActive(catId, itemName, e) {
 function delItem(catId, itemName) {
   if (!confirm(`"${itemName}" silinsin mi?`)) return;
   customItems[catId] = (customItems[catId] || []).filter(i => i.name !== itemName);
+  // Sabit itemdan değilse zaten custom'da, sabit ise uyar
   const cat = CAT_DATA.find(c => c.id === catId);
   if (cat && cat.items.some(i => i.name === itemName)) {
     toast('w', 'Uyarı', 'Varsayılan itemler silinemez. Sadece fiyatlar temizlendi.');
@@ -1032,77 +871,58 @@ function clearPrices() {
 function filterItems() { filterText = document.getElementById('search').value.toLowerCase(); renderTable(); }
 
 // ── MODAL ─────────────────────────────────────────────────────────
-function openAddModal() {
-  // Kategori select'i CAT_DATA'dan doldur
-  const sel = document.getElementById('m-cat');
-  sel.innerHTML = CAT_DATA.map(cat =>
-    `<option value="${cat.id}">${cat.name}</option>`
-  ).join('');
-  // Aktif kategoriye ayarla
-  sel.value = activeCat;
-
-  // Alanları sıfırla
-  document.getElementById('m-name').value = '';
-  document.getElementById('m-levels').value = '';
-  document.getElementById('m-ids').value = '';
-  selectedTypeIdx = 0;
-
-  // Tip butonları + önizleme
-  renderTypeButtons();
-  updateLevelPreview();
-
-  // Seviye input'unu dinle (canlı önizleme)
-  document.getElementById('m-levels').oninput = updateLevelPreview;
-
-  document.getElementById('add-modal').classList.add('open');
-}
-
+function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
 function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
 
 function addItem() {
   const name = document.getElementById('m-name').value.trim();
   const catId = document.getElementById('m-cat').value;
+  const isUnique = document.getElementById('m-unique').value === 'true';
+  const lvRaw = document.getElementById('m-levels').value;
   const idsRaw = document.getElementById('m-ids').value.trim();
-
   if (!name) { alert('Item adı boş olamaz.'); return; }
-
-  // Kategori config'den tip bilgisi al
-  const cfg = getCatTypeConfig(catId);
-  const typeObj = cfg.types[selectedTypeIdx];
-  const isUnique = typeObj ? typeObj.isUnique : false;
-
-  // Seviyeleri hesapla
-  const levels = getEffectiveLevels();
-  if (!levels.length) { alert('En az bir seviye gerekli.'); return; }
-
-  // ID'leri doğrula
+  if (!lvRaw) { alert('En az bir seviye girin.'); return; }
+  const levels = lvRaw.split(',').map(s => s.trim()).filter(Boolean);
   const allIds = idsRaw ? idsRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : [];
   const bad = allIds.filter(id => !/^[0-9a-f]{6,8}$/.test(id));
   if (bad.length) { alert(`Geçersiz ID: ${bad.join(', ')}`); return; }
-
   if (!customItems[catId]) customItems[catId] = [];
-  customItems[catId].push({
-    name,
-    unique: isUnique,
-    levels: levels.map(lv => ({ level: lv, ids: allIds, confirmed: false }))
-  });
-
+  customItems[catId].push({ name, unique: isUnique, levels: levels.map(lv => ({ level: lv, ids: allIds, confirmed: false })) });
   if (!prices[catId]) prices[catId] = {};
   prices[catId][name] = {};
   levels.forEach(lv => prices[catId][name][lv] = { price: '', active: false });
-
-  save();
-  buildCatTabs();
+  save(); buildCatTabs();
   activeCat = catId;
-  renderTable();
-  closeModal();
-  toast('s', 'Eklendi ✓', `"${name}" → ${CAT_DATA.find(c=>c.id===catId)?.name} (${levels.length} seviye)`);
+  renderTable(); closeModal();
+  toast('s', 'Eklendi', name);
 }
 
 // ── EXPORT / IMPORT ───────────────────────────────────────────────
-function autoExport() { save(); }
+
+function buildFullIdMap() {
+  const fullMap = {};
+  for (const cat of CAT_DATA) {
+    const allItems = [...cat.items, ...(customItems[cat.id] || [])];
+    for (const item of allItems) {
+      for (const lv of item.levels) {
+        if (lv.ids && lv.ids.length > 0) {
+          for (const id of lv.ids) {
+            if (!fullMap[id]) fullMap[id] = `${item.name} ${lv.level}`.trim();
+          }
+        }
+      }
+    }
+  }
+  Object.assign(fullMap, learnedIDs);
+  return fullMap;
+}
+
+function autoExport() {
+  save();
+}
 
 function exportData() {
+  // CAT_DATA'daki tüm id'leri (onaylı + tahmin) kaydet
   const catIds = {};
   for (const cat of CAT_DATA) {
     catIds[cat.id] = {};
@@ -1138,8 +958,11 @@ function importData() {
         if (d.customItems) customItems = d.customItems;
         if (d.selLv) selLv = d.selLv;
         if (d.learnedIDs) {
+          // Yeni ID'leri mevcut learnedIDs'e merge et
           Object.assign(learnedIDs, d.learnedIDs);
+          // Her ID'yi CONFIRMED_IDS'e ekle
           Object.keys(d.learnedIDs).forEach(id => CONFIRMED_IDS.add(id));
+          // CAT_DATA'daki seviyelere ID'leri işle
           const idMap = d.learnedIDs;
           for (const cat of CAT_DATA) {
             for (const item of cat.items) {
@@ -1166,8 +989,462 @@ function importData() {
   inp.click();
 }
 
+
 function downloadMarketScript() {
-  toast('s', 'Script', 'Pazar Analiz Script indirildi.');
+  const script = `"""
+NOWA ONLINE - PAZAR ANALİZ SCRİPTİ v3
+pip install openpyxl
+"""
+
+import struct, socket, subprocess, time, os, json
+from datetime import datetime
+
+# ══════════════════════════════════════════════════════════════
+#  AYARLAR
+# ══════════════════════════════════════════════════════════════
+ID_DB_PATH   = r"C:\\adb\\nowa_ids.json"
+BIRIKIM_PATH = r"C:\\adb\\pazar_birikim.json"
+ADB          = r"D:\\LDPlayer\\LDPlayer9\\adb.exe"
+ADB_SERIAL   = "127.0.0.1:5555"
+PCAP_PATH    = "/sdcard/analiz_scan.pcap"
+LOCAL_PCAP   = r"C:\\adb\\analiz_scan.pcap"
+EXCEL_OUT    = r"C:\\adb\\pazar_analiz.xlsx"
+HEDEF_OYUNCU = "ImNoSSee"
+# ══════════════════════════════════════════════════════════════
+
+KNOWN_IDS = {
+    "10243217":"Fragment of Thnder LWL 3 +0", "15719a0e":"Rogue Titan Pads +7", "2d6d9a0e":"Rogue Titan Pads +7",
+    "9f679f06":"Bloody Dagger +7", "ed2a8b0e":"Rogue Full Guard Pauldron +7", "506e9916":"Red Chest +0",
+    "68bc3217":"Green Gem LVL 2 +0", "0b641c07":"Frozendeath Dagger +0", "5157470c":"Warrior Holy Titan Pads +1",
+    "c719e10b":"Thunder Animor +5", "3abcbf10":"Priest Fabric Pauldron +8", "0ac4bf10":"Priest Fabric Helmet +8",
+    "6d1a8112":"Shaman Silver Earring Old", "9bbf090a":"IronShade Bow Reb+5", "ff18380c":"Warrior Titan Helmet +7",
+    "1f35080a":"Bloody Bow +7", "21130c11":"Priest Holy Titan Gauntlets +1", "390f0c11":"Priest Holy Titan Helmet +1",
+    "da9c8e0f":"Mage Fabric Gauntlets +6", "dac9bf10":"Priest Fabric Gauntlets +6", "90049b16":"Talisman +0",
+    "da00b708":"Thunder Impact Reb+4", "471f1c13":"Str Necklace +0", "b0b03217":"Sunlight Gem LWL 4 +0",
+    "90d57006":"Legendary Cape +0", "78344b30":"Middle Mastery CR BOX +0", "73679f06":"Bloody Dagger +3",
+    "82d39d0f":"Mage Half Guard Pauldron +8", "0cbfa90e":"Rogue Holy Titan Boots +6", "54b3a90e":"Rogue Holy Titan Pads +6",
+    "3cb7a90e":"Rogue Holy Titan Helmet +6", "24bba90e":"Rogue Holy Titan Gauntlets +6", "2f6b9a0e":"Rogue Titan Pauldron +7",
+    "17c9fc10":"Rogue Titan Pads +7", "0cbda90e":"Rogue Holy Titan Boots +4", "6bafa90e":"Rogue Holy Titan Pauldron +6",
+    "255f470c":"Warrior Holy Titan Gauntlets +5", "6dada90e":"Rogue Holy Titan Pauldron +5", "245f470c":"Warrior Holy Titan Gauntlets +4",
+    "fd729a0e":"Rogue Titan Helmet +5", "fc729a0e":"Rogue Titan Helmet +4", "395b470c":"Rogue Holy Titan Helmet +1",
+    "e02b3217":"Fragment of Tempest LWL 5 +0", "a0f7491e":"High CR BOX +0", "e0a83217":"Silver Gem LWL 6 +0",
+    "25b9a90e":"Rogue Holy Titan Gauntlets +5", "0d63470c":"Warrior Holy Titan Boots +5", "485b470c":"Warrior Holy Titan Helmet +6",
+    "305f470c":"Warrior Holy Titan Gauntlets +6", "3f5b470c":"Warrior Holy Titan Helmet +7", "6953470c":"Warrior Holy Titan Pauldron +1",
+    "7853470c":"Warrior Holy Titan Pauldron +6", "6eada90e":"Rogue Holy Titan Pauldron +6", "3eb5a90e":"Rogue Holy Titan Helmet +6",
+    "56b1a90e":"Rogue Holy Titan Pads +6", "6f53470c":"Warrior Holy Titan Pauldron +7", "7953470c":"Warrior Holy Titan Pauldron +7",
+    "5557470c":"Warrior Holy Titan Pads +5", "2115380c":"Warrior Titan Pads +7", "315f470c":"Warrior Holy Titan Gauntlets +7",
+    "0963470c":"Warrior Holy Titan Boots +1", "51b1a90e":"Rogue Holy Titan Pads +1", "fd18380c":"Warrior Titan Helmet +5",
+    "7dafd00c":"Warrior Titan Helmet Reb+5", "0a19380c":"Warrior Titan Helmet +8", "7bafd00c":"Warrior Titan Helmet Reb+3",
+    "15c9fc10":"Priest Titan Pads +5", "cd20380c":"Warrior Titan Boots +5", "2d11380c":"Warrior Titan Pauldron +5",
+    "ce7a9a0e":"Rogue Titan Boots +6", "2e11380c":"Warrior Titan Pauldron +6", "e6d0fc10":"Priest Titan Gauntlets +6",
+    "7fea8b07":"Giant Phantom Sword +7", "1515380c":"Warrior Titan Pads +5", "2b11380c":"Warrior Titan Pauldron +3",
+    "2b6b9a0e":"Rogue Titan Pauldron +3", "f534080a":"Bloody Bow +5", "79afd00c":"Warrior Titan Helmet Reb+1",
+    "91abd00c":"Warrior Titan Pads Reb+1", "c0c53517":"Storem Mp Pot +0", "f3cefc10":"Priest Holy Titan Helmet +7",
+    "e501330f":"Rogue Titan Pauldron Reb+1", "3911380c":"Warrior Titan Pauldron +7", "d920380c":"Warrior Titan Boots +7",
+    "e51c380c":"Warrior Titan Gauntlets +5", "cd7a9a0e":"Rogue Titan Boots +5", "e5769a0e":"Rogue Titan Gauntlets +5",
+    "22c0bf10":"Priest Fabric Pads +8", "570b0c11":"Priest Holy Titan Pads +7", "f54b420f":"Rogue Holy Titan Helmet Reb+1",
+    "c553420f":"Rogue Holy Titan Boots Reb+1", "0d48420f":"Rogue Holy Titan Pads Reb+1", "dd4f420f":"Rogue Holy Titan Gauntlets Reb+1",
+    "2544420f":"Rogue Holy Titan Pauldron Reb+1", "c953420f":"Rogue Holy Titan Boots Reb+5", "4b898312":"Elarin Ring +1",
+    "71b1ad13":"Ring of Shadow +0", "d62e8b0e":"Rogue Full Guard Pads +8", "ee2a8b0e":"Rogue Full Guard Pauldron +8",
+    "b6888312":"Rogue Silver Earring +0", "9059170a":"Dragon Wing Bow +6", "cf05330f":"Rogue Titan Pads Reb+3",
+    "013f4a14":"Elderwood Belt +0", "e61c380c":"Warrior Titan Gauntlets +6", "8911330f":"Rogue Titan Boots Reb+5",
+    "e901330f":"Rogue Titan Pauldron Reb+5", "d105330f":"Rogue Titan Pads Reb+5", "e5789a0e":"Rogue Titan Gauntlets +7",
+    "e7769a0e":"Rogue Titan Gauntlets +7", "cf7a9a0e":"Rogue Titan Boots +7", "cd7c9a0e":"Rogue Titan Boots +7",
+    "27b9a90e":"Rogue Holy Titan Gauntlets +7", "0fbda90e":"Rogue Holy Titan Boots +7", "0dbfa90e":"Rogue Holy Titan Boots +7",
+    "57b1a90e":"Rogue Holy Titan Pads +7", "6fada90e":"Rogue Holy Titan Pauldron +7", "6dafa90e":"Rogue Holy Titan Pauldron +7",
+    "be328b0e":"Rogue Full Guard Helmet +8", "aca7d00c":"Warrior Titan Pauldron Reb+4", "f9e87e09":"Wrath's Spear Reb+1",
+    "3314b207":"Katana Sword Reb+1", "a522470b":"Iceberg Staff Reb+1", "d15b1907":"Cold Dagger +7",
+    "c03da516":"SKILL QUEST +0", "f734080a":"Bloody Bow +7", "b147140a":"Arcane Bow +3",
+    "cf469009":"HellFire +0", "f927470b":"Hope's Thunder Staff Reb+5", "8dbf7e09":"Firelance +7",
+    "e4469009":"HellFire Bow +6", "8bbf7e09":"Firelance +5", "6383c607":"King Axe +5",
+    "23fd560b":"Venom Hammer +5", "2bfd560b":"Nightfang Hammer +3", "0d914d08":"Frozen Axe +0",
+    "894bb913":"Fire Ring +1", "cd70b913":"Frozen Ring +0", "ba888312":"Elfen Earring +0",
+    "a6981a13":"Amulet Of Evil +0", "88f47206":"Low Mastery CR BOX +0", "f8273217":"Fragment of Eclipse LWL 4 +0",
+    "b0333217":"Fragment of Obsidian LWL 7 +0", "10b6b335":"Full Premium +0", "d0f2c913":"Clan Premium +0",
+    "284ab929":"Lucky Tried +0", "98b9b02f":"Character Seal Scrool +0", "3ee2da0f":"Mage Holy Titan Helmet +6",
+    "3de2da0f":"Mage Holy Titan Helmet +5", "8ff47206":"Middle Mastery CR BOX +0", "8af47206":"Middle Mastery CR BOX +0",
+    "8bf47206":"High Mastery CR BOX +0", "db00b708":"Thunder Impact Reb+5", "04fcb608":"Thunder Impact Reb+5",
+    "dcfcb608":"Thunder Impact Reb+5", "e200b708":"Thunder Impact Reb+5", "28fd560b":"Venom Hammer Reb+3",
+    "29fd560b":"Venom Hammer Reb+4", "2afd560b":"Venom Hammer Reb+5", "09170c11":"Priest Holy Titan Boots +1",
+    "495b470c":"Warrior Holy Titan Helmet +7", "6157470c":"Warrior Holy Titan Pads +7", "1963470c":"Warrior Holy Titan Boots +7",
+    "e9e9df0c":"Warrior Holy Titan Pauldron Reb+1", "baf1df0c":"Warrior Holy Titan Helmet Reb+2", "d4eddf0c":"Warrior Holy Titan Pads Reb+4",
+    "dd7e1413":"Courage Pendant +1", "017c8012":"Courage Earring +1", "bbf1df0c":"Warrior Holy Titan Helmet Reb+3",
+    "ebe9df0c":"Warrior Holy Titan Pauldron Reb+3", "8bf9df0c":"Warrior Holy Titan Boots Reb+3", "a3f5df0c":"Warrior Holy Titan Gauntlets Reb+3",
+    "fd749a0e":"Rogue Titan Helmet +7", "510b0c11":"Priest Holy Titan Pads +1", "1b150c11":"Priest Holy Titan Gauntlets +7",
+    "4b0d0c11":"Priest Holy Titan Pads +7", "23c7fc10":"Priest Titan Pauldron +7", "16c9fc10":"Priest Titan Pads +6",
+    "feccfc10":"Priest Titan Helmet +6", "22c7fc10":"Priest Titan Pauldron +6", "0bcbfc10":"Priest Titan Pads +7",
+    "c3d6fc10":"Priest Titan Boots +7", "dbd2fc10":"Priest Titan Gauntlets +7", "7b6b9f06":"Bloody Dagger Reb+5",
+    "f2c7bf10":"Priest Fabric Gauntlets +8", "0bc4bf10":"Priest Fabric Helmet Reb+1", "23c0bf10":"Priest Fabric Pads Reb+1",
+    "3bbcbf10":"Priest Fabric Pauldron Reb+1", "dbcbbf10":"Priest Fabric Boots Reb+1", "f3c7bf10":"Priest Fabric Gauntlets Reb+1",
+    "320acf10":"Priest Half Guard Gauntlets +8", "5802cf10":"Priest Half Guard Pads +8", "100ecf10":"Priest Half Guard Boots +8",
+    "4006cf10":"Priest Half Guard Helmet +8", "1a0ecf10":"Priest Half Guard Boots +8", "5702cf10":"Priest Half Guard Pads +7",
+    "6102cf10":"Priest Half Guard Pads +7", "58fc7206":"High Mastery CR BOX +0", "f1988e0f":"Mage Fabric Helmet +5",
+    "12998e0f":"Mage Fabric Helmet +8", "42918e0f":"Mage Fabric Pauldron +8", "2a958e0f":"Mage Fabric Pads +8",
+    "f99c8e0f":"Mage Fabric Gauntlets +7", "41918e0f":"Mage Fabric Pauldron +7", "29958e0f":"Mage Fabric Pads +7",
+    "11998e0f":"Mage Fabric Helmet +7", "e1a08e0f":"Mage Fabric Boots +7", "41d99d0f":"Mage Half Guard Helmet Reb+1",
+    "10e19d0f":"Mage Half Guard Boots +8", "57d59d0f":"Mage Half Guard Pads +7", "28dd9d0f":"Mage Half Guard Gauntlets +8",
+    "51db9d0f":"Mage Half Guard Helmet +7", "39df9d0f":"Mage Half Guard Gauntlets +7", "21e39d0f":"Mage Half Guard Boots +7",
+}
+
+
+def log(msg):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
+
+
+def load_id_db():
+    confirmed = dict(KNOWN_IDS)
+    predicted = {}
+    try:
+        if os.path.exists(ID_DB_PATH):
+            with open(ID_DB_PATH, "r", encoding="utf-8") as f:
+                saved = json.load(f)
+            if isinstance(saved, dict) and "learnedIDs" in saved:
+                confirmed.update(saved["learnedIDs"])
+                log(f"  {len(saved['learnedIDs'])} ID yüklendi")
+            elif isinstance(saved, dict) and "confirmed" in saved:
+                confirmed.update(saved.get("confirmed", {}))
+                predicted.update(saved.get("predicted", {}))
+    except Exception as e:
+        log(f"  ID DB hatası: {e}")
+    return confirmed, predicted
+
+
+def load_birikim():
+    try:
+        if os.path.exists(BIRIKIM_PATH):
+            with open(BIRIKIM_PATH, "r", encoding="utf-8") as f:
+                d = json.load(f)
+            log(f"  Birikim: {len(d.get('records',[]))} kayıt")
+            return d
+    except: pass
+    return {"records": [], "sellers": {}, "scan_count": 0}
+
+
+def save_birikim(data):
+    try:
+        with open(BIRIKIM_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        log(f"  Birikim kayıt hatası: {e}")
+
+
+def merge_records(birikim, new_records):
+    existing = set((r["seller"], r["item_id"], r["price"]) for r in birikim["records"])
+    added = 0
+    for r in new_records:
+        key = (r["seller"], r["item_id"], r["price"])
+        if key not in existing:
+            birikim["records"].append(r)
+            existing.add(key)
+            added += 1
+            s = r["seller"]
+            birikim["sellers"][s] = birikim["sellers"].get(s, 0) + 1
+    birikim["scan_count"] = birikim.get("scan_count", 0) + 1
+    return added
+
+
+def adb(cmd):
+    try:
+        return subprocess.run([ADB, "-s", ADB_SERIAL, "shell", cmd],
+                              capture_output=True, timeout=20)
+    except: return None
+
+
+def start_tcpdump():
+    adb("su 0 killall tcpdump 2>/dev/null")
+    time.sleep(1)
+    adb(f"su 0 rm -f {PCAP_PATH}")
+    time.sleep(0.3)
+    subprocess.Popen([ADB, "-s", ADB_SERIAL, "shell",
+                      f"su 0 tcpdump -i any -s 0 tcp -w {PCAP_PATH} 2>/dev/null"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(2)
+    log("tcpdump baslatildi.")
+
+
+def stop_tcpdump():
+    adb("su 0 killall tcpdump 2>/dev/null")
+    time.sleep(1)
+
+
+def get_pcap_size():
+    try:
+        r = adb(f"su 0 wc -c {PCAP_PATH}")
+        if r and r.stdout:
+            return int(r.stdout.split()[0])
+    except: pass
+    return 0
+
+
+def pull_pcap():
+    adb("su 0 killall tcpdump")
+    time.sleep(2)
+    r = subprocess.run([ADB, "-s", ADB_SERIAL, "pull", PCAP_PATH, LOCAL_PCAP],
+                       capture_output=True, timeout=120)
+    return r.returncode == 0 and os.path.exists(LOCAL_PCAP)
+
+
+def read_packets(path):
+    packets = []
+    try:
+        with open(path, "rb") as f:
+            magic = f.read(4)
+            if len(magic) < 4: return packets
+            endian = "<" if magic == b"\\xd4\\xc3\\xb2\\xa1" else ">"
+            f.read(20)
+            while True:
+                hdr = f.read(16)
+                if len(hdr) < 16: break
+                _, _, incl_len, _ = struct.unpack(endian + "IIII", hdr)
+                data = f.read(incl_len)
+                if len(data) == incl_len:
+                    packets.append(data)
+    except Exception as e:
+        log(f"Pcap okuma: {e}")
+    return packets
+
+
+def extract_payloads(packets):
+    result = b""
+    for pkt in packets:
+        try:
+            if len(pkt) < 20: continue
+            sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
+            eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
+            if   sll_et == 0x0800: ip_start = 16
+            elif eth_et == 0x0800: ip_start = 14
+            else: continue
+            if len(pkt) <= ip_start + 20: continue
+            if (pkt[ip_start] >> 4) != 4: continue
+            ihl  = (pkt[ip_start] & 0x0F) * 4
+            if pkt[ip_start + 9] != 6: continue
+            ts   = ip_start + ihl
+            if len(pkt) <= ts + 20: continue
+            doff = ((pkt[ts + 12] >> 4) & 0xF) * 4
+            pay  = pkt[ts + doff:]
+            if len(pay) >= 10:
+                result += pay
+        except: pass
+    return result
+
+
+def parse_records(data):
+    records, seen, n, i = [], set(), len(data), 0
+    while i < n - 22:
+        if data[i] == 0xaa and i + 1 < n and data[i+1] == 0x55:
+            i += 2; continue
+        if i + 2 > n: break
+        name_len = struct.unpack("<H", data[i:i+2])[0]
+        if not (2 <= name_len <= 25):
+            i += 1; continue
+        name_start = i + 2
+        name_end   = name_start + name_len * 2
+        if name_end + 21 > n:
+            i += 1; continue
+        try:
+            name = data[name_start:name_end].decode("utf-16-le")
+        except:
+            i += 1; continue
+        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
+            i += 1; continue
+        j = name_end
+        item_count = 0
+        while j + 20 <= n:
+            item_id = data[j+1:j+5].hex()
+            price   = struct.unpack("<I", data[j+9:j+13])[0]
+            if 1_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
+                key = (name, item_id, price)
+                if key not in seen:
+                    seen.add(key)
+                    records.append({"seller": name, "item_id": item_id, "price": price})
+                item_count += 1
+                j += 20
+            else:
+                break
+        if item_count > 0:
+            i = j
+        else:
+            i += 1
+    return records
+
+
+def hedef_uyari(oyuncu):
+    log(f"  HEDEF BULUNDU: {oyuncu} pazarda!")
+    try:
+        import winsound
+        for _ in range(5): winsound.Beep(1200, 300); time.sleep(0.1)
+    except: pass
+    try:
+        import subprocess as sp
+        sp.Popen(["powershell", "-WindowStyle", "Hidden", "-Command",
+                  f'Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show("HEDEF {oyuncu} PAZARDA!", "NOWA", 0, 48)'],
+                 creationflags=0x08000000)
+    except: pass
+
+
+def save_excel(records, confirmed=None, predicted=None, birikim_modu=False):
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import PatternFill, Font, Alignment
+    except ImportError:
+        log("HATA: pip install openpyxl"); return
+
+    db_c = confirmed or {}
+    db_p = predicted or {}
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Birikim" if birikim_modu else "Pazar"
+
+    hf = PatternFill("solid", fgColor="1F4E79")
+    cf = PatternFill("solid", fgColor="1D4E2A")
+    pf = PatternFill("solid", fgColor="4A2D00")
+    uf = PatternFill("solid", fgColor="3A1010")
+    af = PatternFill("solid", fgColor="2C2C2C")
+
+    for ci, h in enumerate(["Satici", "Item ID", "Item Adi", "Durum", "Fiyat"], 1):
+        c = ws.cell(row=1, column=ci, value=h)
+        c.fill = hf; c.font = Font(bold=True, color="FFFFFF")
+        c.alignment = Alignment(horizontal="center")
+
+    for ri, r in enumerate(records, 2):
+        iid  = r["item_id"]
+        name = db_c.get(iid) or db_p.get(iid, "")
+        if   iid in db_c: status, fill = "Onaylı", cf
+        elif iid in db_p: status, fill = "Tahmin", pf
+        else:             status, fill = "?", uf
+        for ci, val in enumerate([r["seller"], iid, name, status, r["price"]], 1):
+            c = ws.cell(row=ri, column=ci, value=val)
+            c.fill = fill; c.font = Font(color="FFFFFF")
+
+    for ci, w in enumerate([20, 14, 35, 12, 16], 1):
+        ws.column_dimensions[ws.cell(row=1, column=ci).column_letter].width = w
+
+    path = EXCEL_OUT.replace("pazar_analiz", "pazar_birikim") if birikim_modu else EXCEL_OUT
+    try:
+        wb.save(path)
+        log(f"  Excel: {path}")
+    except Exception as e:
+        log(f"  Excel hata: {e}")
+
+
+def main():
+    log("NOWA Pazar Dinleme v3")
+
+    try:
+        import subprocess as _sp
+        _sp.run([ADB, "connect", ADB_SERIAL], capture_output=True, timeout=5)
+        r = _sp.run([ADB, "devices"], capture_output=True, timeout=10)
+        out = r.stdout.decode("utf-8", errors="ignore")
+        lines = [l for l in out.splitlines() if l.strip() and "List of" not in l and "offline" not in l]
+        if lines: log(f"  ADB: {lines[0]}")
+        else: log("  ADB bagli degil! LDPlayer acik mi?")
+    except Exception as e:
+        log(f"  ADB hata: {e}")
+
+    confirmed, predicted = load_id_db()
+    birikim = load_birikim()
+    log(f"  {len(confirmed)} onaylı ID")
+    log(f"  Birikim: {birikim['scan_count']} tarama")
+    log("")
+    log("Enter=Yeni tarama  b=Birikim Excel  s=Sifirla  q=Cik")
+    log("")
+
+    while True:
+        try:
+            cmd = input("Komut: ").strip().lower()
+
+            if cmd == "q":
+                break
+            elif cmd == "b":
+                if not birikim["records"]: log("Birikim bos."); continue
+                save_excel(birikim["records"], confirmed, predicted, birikim_modu=True)
+                if HEDEF_OYUNCU in birikim.get("sellers", {}):
+                    log(f"  HEDEF '{HEDEF_OYUNCU}': {birikim['sellers'][HEDEF_OYUNCU]} item")
+                continue
+            elif cmd == "s":
+                if input("Sifirla? (evet): ").strip().lower() == "evet":
+                    birikim = {"records": [], "sellers": {}, "scan_count": 0}
+                    save_birikim(birikim); log("Birikim sifirlandi.")
+                continue
+
+            log("tcpdump baslatiliyor...")
+            start_tcpdump()
+            log("SIMDI: Pazar persomenini AC, kapat")
+
+            prev_size = 0
+            wait_sec  = 0
+            BURST_TH  = 15 * 1024
+
+            while True:
+                time.sleep(1)
+                wait_sec += 1
+                cur  = get_pcap_size()
+                diff = cur - prev_size
+                prev_size = cur
+
+                if wait_sec % 10 == 0:
+                    log(f"  Bekleniyor... {wait_sec}sn, pcap: {cur} byte")
+
+                if diff >= BURST_TH:
+                    log(f"  Veri geldi! ({diff//1024}KB/sn) — 5sn bekleniyor...")
+                    time.sleep(8)
+                    log("  Analiz basliyor...")
+                    break
+
+                if wait_sec >= 120:
+                    log("  120sn gecti, veri gelmedi.")
+                    stop_tcpdump(); break
+
+            if not pull_pcap():
+                log("PCAP cekme basarisiz!"); continue
+
+            pkts    = read_packets(LOCAL_PCAP)
+            payload = extract_payloads(pkts)
+            recs    = parse_records(payload)
+            log(f"  {len(recs)} kayit / {len(set(r['seller'] for r in recs))} satici")
+
+            if not recs:
+                log("  Kayit bulunamadi. Persomeni yavaş kaydır."); continue
+
+            added = merge_records(birikim, recs)
+            log(f"  Birikime {added} yeni kayit (toplam: {len(birikim['records'])})")
+
+            if HEDEF_OYUNCU:
+                for r in recs:
+                    if r["seller"].lower() == HEDEF_OYUNCU.lower():
+                        hedef_uyari(HEDEF_OYUNCU); break
+                if HEDEF_OYUNCU in birikim.get("sellers", {}):
+                    log(f"  HEDEF '{HEDEF_OYUNCU}': {birikim['sellers'][HEDEF_OYUNCU]} item")
+
+            save_birikim(birikim)
+            save_excel(recs, confirmed, predicted)
+
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            log(f"Hata: {e}")
+            import traceback; traceback.print_exc()
+            time.sleep(2)
+
+    stop_tcpdump()
+    log("Bitti.")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+    input("Kapatmak icin Enter...")
+`;
+  const blob = new Blob([script], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'market_dinleme.py';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('s', 'Script İndirildi!', 'market_dinleme.py — C:\\adb\\ klasörüne koy. pip install openpyxl');
 }
 
 function downloadScript() {
@@ -1183,13 +1460,432 @@ function downloadScript() {
     });
   });
   if (!alarmLines.length) { toast('w', 'Uyarı', 'Önce fiyat girip aktifleştir.'); return; }
-  toast('s', 'Script İndirildi!', `${alarmLines.length} alarm kurulu.`);
+
+  const alarmBlock = alarmLines.join('\n');
+
+  const script = `"""
+NOWA ONLINE - PAZAR ALARM SISTEMI
+===================================
+Bu dosya NOWA Alarm UI tarafından otomatik olusturuldu.
+Calistir:  python market_alarm.py
+Durdur:    Ctrl+C
+"""
+
+import struct, socket, subprocess, time, os, urllib.request, urllib.parse, sys
+from datetime import datetime
+
+try:
+    import winsound
+    HAS_WINSOUND = True
+except ImportError:
+    HAS_WINSOUND = False
+
+# =============================================
+#  AYARLAR
+# =============================================
+GAME_SERVER = "213.238.175.103"
+ADB         = r"D:\\LDPlayer\\LDPlayer9\\adb.exe"
+ADB_SERIAL  = "127.0.0.1:5555"   # 'adb devices' ciktisindaki cihaz adresi
+PCAP_PATH   = "/sdcard/alarm_scan.pcap"
+LOCAL_PCAP  = r"C:\\adb\\alarm_scan.pcap"
+
+# -- Telegram ---------------------------------
+TELEGRAM_TOKEN   = "8514471086:AAHuzFcpqhWwX1c4cogEo1A11WzXZ-YZhhg"
+TELEGRAM_CHAT_ID = "1598896323"
+# ---------------------------------------------
+# =============================================
+
+ALARM_LIST = [
+${alarmBlock}
+]
+
+def log(msg):
+    ts = datetime.now().strftime('%H:%M:%S')
+    print(f"[{ts}] {msg}", flush=True)
+
+def adb(cmd):
+    try:
+        return subprocess.run([ADB, "-s", ADB_SERIAL, "shell", cmd], capture_output=True, timeout=20)
+    except FileNotFoundError:
+        log(f"HATA: ADB bulunamadi: {ADB}")
+        log("  -> ADB yolunu script icinde duzenle (ADB = r'...')")
+        return None
+    except Exception as e:
+        log(f"ADB hata: {e}")
+        return None
+
+def check_adb():
+    """ADB baglantisini kontrol et, LDPlayer icin otomatik baglan"""
+    log("ADB baglantisi kontrol ediliyor...")
+    # LDPlayer icin once TCP baglantisi dene (5555, 5556, 5554)
+    try:
+        subprocess.run([ADB, "connect", ADB_SERIAL], capture_output=True, timeout=5)
+    except: pass
+    time.sleep(1)
+    try:
+        r = subprocess.run([ADB, "devices"], capture_output=True, timeout=10)
+        out = r.stdout.decode("utf-8", errors="ignore")
+        lines = [l for l in out.splitlines() if l.strip() and "List of" not in l and "offline" not in l]
+        if not lines:
+            log("HATA: Hicbir cihaz bagli degil!")
+            log("  -> LDPlayer acik mi? Oyun calistirildi mi?")
+            log("  -> ADB yolu dogru mu?: " + ADB)
+            log("  -> Elle baglanmak icin: adb connect 127.0.0.1:5555")
+            return False
+        log(f"  Cihaz bulundu: {lines[0]}")
+        return True
+    except FileNotFoundError:
+        log(f"HATA: ADB bulunamadi: {ADB}")
+        return False
+
+def start_tcpdump():
+    """Eski tcpdump'i oldur, yenisini arka planda baslat"""
+    log("Tcpdump baslatiliyor...")
+    adb("su 0 killall tcpdump 2>/dev/null")
+    time.sleep(1.5)
+    adb(f"su 0 rm -f {PCAP_PATH}")
+    time.sleep(0.5)
+    proc = subprocess.Popen(
+        [ADB, "-s", ADB_SERIAL, "shell", f"su 0 tcpdump -i any -s 0 tcp -w {PCAP_PATH}"],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    time.sleep(2)
+    log(f"  Tcpdump aktif (PID: {proc.pid})")
+    return proc
+
+def pull_pcap():
+    """Tcpdump'i duraksatmadan dosyayi cek (tcpdump'i OLDURME)"""
+    os.makedirs(os.path.dirname(LOCAL_PCAP), exist_ok=True)
+    r = subprocess.run([ADB, "-s", ADB_SERIAL, "pull", PCAP_PATH, LOCAL_PCAP], capture_output=True, timeout=120)
+    if r.returncode == 0:
+        # Telefondaki pcap'i sil - her taramada sıfırdan başlasın
+        adb(f"su 0 rm -f {PCAP_PATH}")
+        return True
+    return False
+
+def get_pcap_size():
+    try:
+        r = adb(f"su 0 wc -c {PCAP_PATH} 2>/dev/null")
+        if r and r.stdout:
+            parts = r.stdout.decode("utf-8", errors="ignore").strip().split()
+            if parts:
+                return int(parts[0])
+    except:
+        pass
+    return 0
+
+def read_packets(path):
+    packets = []
+    try:
+        with open(path, "rb") as f:
+            magic = f.read(4)
+            if len(magic) < 4: return packets
+            endian = "<" if magic == b"\\xd4\\xc3\\xb2\\xa1" else ">"
+            f.read(20)
+            while True:
+                hdr = f.read(16)
+                if len(hdr) < 16: break
+                _, _, incl_len, _ = struct.unpack(endian + "IIII", hdr)
+                data = f.read(incl_len)
+                if len(data) == incl_len:
+                    packets.append(data)
+    except Exception as e:
+        log(f"Pcap okuma hatasi: {e}")
+    return packets
+
+def extract_server_payloads(packets):
+    result = b""
+    for pkt in packets:
+        try:
+            if len(pkt) < 20: continue
+            sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
+            eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
+            if sll_et == 0x0800:   ip_start = 16
+            elif eth_et == 0x0800: ip_start = 14
+            else: continue
+            if len(pkt) <= ip_start + 20: continue
+            if (pkt[ip_start] >> 4) != 4: continue
+            ihl    = (pkt[ip_start] & 0x0F) * 4
+            proto  = pkt[ip_start + 9]
+            src_ip = socket.inet_ntoa(pkt[ip_start + 12:ip_start + 16])
+            if proto != 6: continue  # IP filtresi yok - iOS uyumlu
+            tcp_start = ip_start + ihl
+            if len(pkt) <= tcp_start + 20: continue
+            data_off = ((pkt[tcp_start + 12] >> 4) & 0xF) * 4
+            payload  = pkt[tcp_start + data_off:]
+            if len(payload) >= 10: result += payload
+        except: pass
+    return result
+
+def parse_market_records(data):
+    records, seen, n, i = [], set(), len(data), 0
+    while i < n - 22:
+        if data[i] == 0xaa and i + 1 < n and data[i+1] == 0x55:
+            i += 2; continue
+        if i + 2 > n: break
+        name_len = struct.unpack("<H", data[i:i+2])[0]
+        if not (2 <= name_len <= 25):
+            i += 1; continue
+        name_start = i + 2
+        name_end   = name_start + name_len * 2
+        if name_end + 20 > n:
+            i += 1; continue
+        try:
+            name = data[name_start:name_end].decode("utf-16-le")
+        except:
+            i += 1; continue
+        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
+            i += 1; continue
+        j = name_end
+        item_count = 0
+        while j + 20 <= n:
+            item_id = data[j+1:j+5].hex()
+            price   = struct.unpack("<I", data[j+9:j+13])[0]
+            if 10_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
+                key = (name, item_id, price)
+                if key not in seen:
+                    seen.add(key)
+                    records.append({"seller": name, "item_id": item_id, "price": price})
+                item_count += 1
+                j += 20
+            else:
+                break
+        if item_count > 0:
+            i = j
+        else:
+            i += 1
+    return records
+def check_alarms(records):
+    if not records:
+        log("  Kayit bulunamadi (pazar verisi bos veya parse edilemedi).")
+        return
+    log(f"  {len(records)} kayit / {len(set(r['item_id'] for r in records))} unique ID analiz ediliyor...")
+    cheapest = {}
+    for r in records:
+        iid = r["item_id"]
+        if iid not in cheapest or r["price"] < cheapest[iid]["price"]:
+            cheapest[iid] = r
+
+    # Alarm listesindeki tum ID'leri topla
+    all_alarm_ids = set(iid for alarm in ALARM_LIST for iid in alarm["item_ids"])
+
+    fired = 0
+    for alarm in ALARM_LIST:
+        hits = [cheapest[iid] for iid in alarm["item_ids"] if iid in cheapest]
+        if not hits:
+            # Pazar verisinde bu alarmin hicbir ID'si yok — tahmin yanlis olabilir
+            missing = [iid for iid in alarm["item_ids"] if iid not in cheapest]
+            if missing:
+                log(f"  ? {alarm['name']:<35} ID bulunamadi: {', '.join(missing[:3])}")
+            continue
+        best = min(hits, key=lambda x: x["price"])
+        if best["price"] <= alarm["max_price"]:
+            fire_alarm(alarm["name"], best["seller"], best["price"], alarm["max_price"])
+            fired += 1
+        else:
+            pct = best["price"] / alarm["max_price"] * 100
+            log(f"  x {alarm['name']:<35} {best['price']:>14,}  (esik {alarm['max_price']:,}  %{pct:.0f})")
+
+    # Pazarda gorduğumuz ama alarm listesinde olmayan ID'ler (bilinmeyen)
+    unknown = {iid: cheapest[iid] for iid in cheapest if iid not in all_alarm_ids}
+    if unknown:
+        log(f"  [{len(unknown)} bilinmeyen ID pazarda goruldu — nowa_ids.json guncelle]")
+
+    if fired == 0: log("  -> Esik altinda alarm yok.")
+    else:          log(f"  *** {fired} ALARM ATESLENEDI! ***")
+
+def send_telegram(text):
+    try:
+        import json as _json, ssl as _ssl
+        url     = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        payload = _json.dumps({"chat_id": TELEGRAM_CHAT_ID, "text": text}).encode("utf-8")
+        req     = urllib.request.Request(
+            url, data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        ctx = _ssl._create_unverified_context()
+        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
+            body = resp.read().decode("utf-8")
+            if '"ok":true' in body:
+                log("  Telegram gonderildi.")
+            else:
+                log(f"  Telegram API hatasi: {body[:300]}")
+    except Exception as e:
+        log(f"  Telegram hatasi: {e}")
+
+def beep():
+    if HAS_WINSOUND:
+        try:
+            for _ in range(5):
+                winsound.Beep(1000, 400)
+                time.sleep(0.15)
+            return
+        except: pass
+    os.system("echo \\a")
+
+def fire_alarm(item_name, seller, price, max_price):
+    log(f"  *** ALARM *** {item_name}  |  {seller}  |  {price:,} gold")
+    msg_tg = (
+        "NOWA PAZAR ALARMI!\\n\\n"
+        f"Item  : {item_name}\\n"
+        f"Satan : {seller}\\n"
+        f"Fiyat : {price:,} gold\\n"
+        f"Esik  : {max_price:,} gold\\n\\n"
+        "Hemen pazari ac!"
+    )
+    send_telegram(msg_tg)
+    beep()
+    msg = (f"ALARM!\\n\\nItem  : {item_name}\\nSatan : {seller}\\n"
+           f"Fiyat : {price:,} gold\\nEsik  : {max_price:,} gold\\n\\nHEMEN PAZARI AC!")
+    try:
+        subprocess.Popen(
+            ["powershell", "-WindowStyle", "Hidden", "-Command",
+             f'Add-Type -AssemblyName System.Windows.Forms; '
+             f'[System.Windows.Forms.MessageBox]::Show("{msg}", "NOWA PAZAR ALARMI", '
+             f'[System.Windows.Forms.MessageBoxButtons]::OK, '
+             f'[System.Windows.Forms.MessageBoxIcon]::Exclamation)'],
+            creationflags=subprocess.CREATE_NO_WINDOW
+        )
+    except Exception as e:
+        log(f"  Popup hatasi: {e}")
+
+def main():
+    log("=" * 60)
+    log("  NOWA ONLINE - PAZAR ALARM SISTEMI")
+    log("=" * 60)
+    log(f"  Alarm sayisi  : {len(ALARM_LIST)}")
+    log(f"  Toplam item_id: {sum(len(a['item_ids']) for a in ALARM_LIST)}")
+    log(f"  ADB yolu      : {ADB}")
+    log(f"  Local pcap    : {LOCAL_PCAP}")
+    log("")
+    log("  Kullanim:")
+    log("    1. LDPlayer/emülatörü ac ve oyuna gir")
+    log("    2. Bu script calisirken pazar persömenini ac")
+    log("    3. Veri gelince otomatik analiz baslar")
+    log("    4. Esik altinda item varsa BIP + POPUP + Telegram")
+    log("    5. Durdurmak: Ctrl+C")
+    log("")
+
+    # Telegram testi
+    log("Telegram baglantisi test ediliyor...")
+    send_telegram("NOWA Alarm Sistemi baslatildi. Baglanti basarili!")
+    log("")
+
+    # ADB kontrol
+    if not check_adb():
+        input("\\nHata! Devam etmek icin Enter'a bas...")
+        return
+
+    # C:\\adb klasörünü olustur
+    os.makedirs(os.path.dirname(LOCAL_PCAP), exist_ok=True)
+
+    scan_no = 0
+    tcpdump_proc = None
+
+    # Pazar mantigi:
+    # - Arkaplan trafigi (koordinat/hareket): surekli ama YAVAS buyur (<5KB/sn)
+    # - Pazar verisi: persomen acilinca ANI BURST gelir (>20KB/sn)
+    # - Burst bittikten 3sn sonra analiz et, bir onceki analiz noktasindan itibaren
+    BURST_THRESHOLD  = 15_000   # 1 saniyede bu kadar bytetan fazla gelirse = pazar burstu
+    BURST_END_SECS   = 8        # Burst sonrasi bu kadar saniye bekliyince analiz et
+
+    try:
+        while True:
+            if tcpdump_proc is None or tcpdump_proc.poll() is not None:
+                tcpdump_proc = start_tcpdump()
+                log("Dinleniyor... Pazar persomenini ac.")
+                log("(Her pazar acilisinda otomatik analiz yapilir — 30sn cooldown normal)")
+
+            prev_size    = get_pcap_size()
+            analyze_from = prev_size   # Son analizden itibaren yeni veriyi izle
+            in_burst     = False
+            burst_end_cnt = 0
+
+            while True:
+                time.sleep(1)
+                sz   = get_pcap_size()
+                diff = sz - prev_size
+                prev_size = sz
+
+                if diff >= BURST_THRESHOLD:
+                    # PAZAR BURSTU algilandi
+                    if not in_burst:
+                        log(f"  >>> Pazar verisi geliyor! ({diff//1024}KB/sn)")
+                        in_burst = True
+                    burst_end_cnt = 0
+
+                elif in_burst:
+                    # Burst bitti, sayac baslat
+                    burst_end_cnt += 1
+                    if burst_end_cnt >= BURST_END_SECS:
+                        # Yeterince durdu — analiz et
+                        log(f"  Burst bitti, analiz basliyor... (toplam pcap: {sz:,} byte)")
+                        break
+                else:
+                    # Sadece arkaplan trafigi, beklemeye devam
+                    pass
+
+            # Analiz: sadece son burst'tan onceki referans noktasindan itibaren
+            scan_no += 1
+            log(f"\\nTarama #{scan_no}")
+            ok = pull_pcap()
+            if not ok or not os.path.exists(LOCAL_PCAP):
+                log("  Pcap cekilemedi.")
+                in_burst = False
+                burst_end_cnt = 0
+                continue
+
+            pkts    = read_packets(LOCAL_PCAP)
+            payload = extract_server_payloads(pkts)
+            log(f"  {len(pkts)} paket / {len(payload):,} byte server verisi")
+
+            if len(payload) == 0:
+                log("  Server verisi bos.")
+            else:
+                recs = parse_market_records(payload)
+                check_alarms(recs)
+
+            log(f"  30sn cooldown sonrasi persomeni tekrar ac.")
+            log("")
+            # Tcpdump'i yeniden baslat - temiz pcap ile devam et
+            adb("su 0 killall tcpdump 2>/dev/null")
+            time.sleep(2)
+            tcpdump_proc = None  # Dis dongu yeniden baslatacak
+            in_burst = False
+            burst_end_cnt = 0
+
+    except KeyboardInterrupt:
+        log("\\nKullanici durdurdu (Ctrl+C).")
+    except Exception as e:
+        log(f"\\nBeklenmeyen hata: {e}")
+        import traceback
+        traceback.print_exc()
+    finally:
+        log("Tcpdump durduruluyor...")
+        adb("su 0 killall tcpdump 2>/dev/null")
+        log("Sistem durduruldu.")
+        input("\\nKapatmak icin Enter'a bas...")
+
+if __name__ == "__main__":
+    main()
+`;
+
+  const blob = new Blob([script], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'market_alarm.py';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  const cnt = alarmLines.length;
+  toast('s', 'Script İndirildi!', `market_alarm.py — ${cnt} alarm kurulu. C:\\adb\\ klasörüne koy ve çalıştır.`);
 }
 
-// ── BULUT ─────────────────────────────────────────────────────────
+// ── BULUT DEPOLAMA (GitHub Gist) ─────────────────────────────────
 const GIST_ID   = "6e21962efea4750ead0f01a0e87c8ef7";
 const GIST_FILE = "nowa_ids.json";
+// Token kullanici tarafindan UI'dan girilir, kodda saklanmaz
 let GIST_TOKEN = localStorage.getItem('nowa_gist_token') || '';
+
 let gistSaveTimer = null;
 
 function setInd(text, color) {
@@ -1203,28 +1899,42 @@ async function gistSave(data) {
     const body = { files: { [GIST_FILE]: { content: JSON.stringify(data, null, 2) } } };
     const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
       method: 'PATCH',
-      headers: { 'Authorization': `Bearer ${GIST_TOKEN}`, 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+      headers: {
+        'Authorization': `Bearer ${GIST_TOKEN}`,
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
       body: JSON.stringify(body)
     });
+    if (!r.ok) { const t = await r.text(); console.error('Gist kayit hatasi:', r.status, t); }
     return r.ok;
-  } catch(e) { return false; }
+  } catch(e) {
+    console.warn('Gist kayit exception:', e);
+    return false;
+  }
 }
 
 async function gistLoad() {
+  // Public gist - token olmadan da okunabilir
   try {
     const headers = { 'X-GitHub-Api-Version': '2022-11-28' };
     if (GIST_TOKEN) headers['Authorization'] = `Bearer ${GIST_TOKEN}`;
     const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, { headers });
-    if (!r.ok) return null;
+    if (!r.ok) { const t = await r.text(); console.error('Gist yukleme hatasi:', r.status, t); return null; }
     const j = await r.json();
     const content = j.files?.[GIST_FILE]?.content;
-    if (!content) return null;
+    if (!content) { console.warn('Gist dosyasi bos'); return null; }
     return JSON.parse(content);
-  } catch(e) { return null; }
+  } catch(e) {
+    console.warn('Gist yukleme exception:', e);
+    return null;
+  }
 }
 
 async function save() {
+  // Her level'daki ID'leri onaylı ve tahmin olarak ayrı kaydet
   const savedIDs = {};
+  // savedIDs yapısı: { "catId|itemName|levelName": { confirmed: [...], predicted: [...] } }
   for (const cat of CAT_DATA) {
     const allItems = [...cat.items, ...(customItems[cat.id]||[])];
     for (const item of allItems) {
@@ -1241,13 +1951,22 @@ async function save() {
   }
   const data = { prices, customItems, selLv, learnedIDs, savedIDs };
   try { localStorage.setItem('nowa_v5', JSON.stringify(data)); } catch {}
-  if (!GIST_TOKEN) { setInd('☁ Token Gerekli', '#ffd600'); promptToken(); return; }
+  if (!GIST_TOKEN) {
+    // Token yoksa sadece localStorage'a kaydet, token iste
+    setInd('☁ Token Gerekli', '#ffd600');
+    promptToken();
+    return;
+  }
   clearTimeout(gistSaveTimer);
   gistSaveTimer = setTimeout(async () => {
     setInd('☁ Kaydediliyor...', '#ffd600');
     const ok = await gistSave(data);
-    if (ok) { setInd('☁ Kaydedildi ✓', '#00e676'); setTimeout(() => setInd('☁ Bulut', '#00c8ff'), 2000); }
-    else { setInd('☁ Hata!', '#ff4455'); }
+    if (ok) {
+      setInd('☁ Kaydedildi ✓', '#00e676');
+      setTimeout(() => setInd('☁ Bulut', '#00c8ff'), 2000);
+    } else {
+      setInd('☁ Hata!', '#ff4455');
+    }
   }, 10000);
 }
 
@@ -1264,15 +1983,20 @@ function promptToken() {
 }
 
 function restoreFromLearnedIDs() {
+  // learnedIDs formatı: { "id": "ItemAdı LevelAdı" }
+  // Her ID'yi CONFIRMED_IDS'e ekle ve CAT_DATA'ya yerleştir
   Object.keys(learnedIDs).forEach(id => {
     CONFIRMED_IDS.add(id);
-    const label = learnedIDs[id];
+    const label = learnedIDs[id]; // örn: "Shade Dagger +5"
+    
+    // CAT_DATA'da eşleşen item+level bul
     let placed = false;
     for (const cat of CAT_DATA) {
       if (placed) break;
       const allItems = [...cat.items, ...(customItems[cat.id]||[])];
       for (const item of allItems) {
         if (placed) break;
+        // label "ItemAdı LevelAdı" formatında, kontrol et
         if (!label.startsWith(item.name)) continue;
         const levelName = label.slice(item.name.length).trim();
         for (const lv of item.levels) {
@@ -1298,6 +2022,7 @@ function restoreCatIds(savedIDs) {
         const saved = savedIDs[key];
         if (!saved) continue;
         lv.ids = [];
+        // Onaylıları ekle ve CONFIRMED_IDS'e kaydet
         if (saved.confirmed && saved.confirmed.length > 0) {
           for (const id of saved.confirmed) {
             if (!lv.ids.includes(id)) lv.ids.push(id);
@@ -1306,6 +2031,7 @@ function restoreCatIds(savedIDs) {
           }
           lv.confirmed = true;
         }
+        // Tahminleri ekle (kırmızı kalacak, CONFIRMED_IDS'e eklenmiyor)
         if (saved.predicted && saved.predicted.length > 0) {
           for (const id of saved.predicted) {
             if (!lv.ids.includes(id)) lv.ids.push(id);
@@ -1324,7 +2050,11 @@ async function load() {
     if (gdata.customItems) customItems = gdata.customItems;
     if (gdata.selLv)       selLv       = gdata.selLv;
     if (gdata.learnedIDs)  Object.assign(learnedIDs, gdata.learnedIDs);
-    if (gdata.savedIDs)    restoreCatIds(gdata.savedIDs);
+    // Yeni format: savedIDs varsa kullan
+    if (gdata.savedIDs) {
+      restoreCatIds(gdata.savedIDs);
+    }
+    // Eski format veya ek olarak: learnedIDs'den CONFIRMED_IDS oluştur ve CAT_DATA'ya yerleştir
     restoreFromLearnedIDs();
     setInd(GIST_TOKEN ? '☁ Bulut' : '☁ Salt Okunur', GIST_TOKEN ? '#00c8ff' : '#ffd600');
     const idCount = Object.keys(learnedIDs).length;
