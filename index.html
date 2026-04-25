@@ -1012,9 +1012,9 @@ from collections import defaultdict
 # ══════════════════════════════════════════════════════════════════
 ID_DB_PATH    = r"C:\\adb\\nowa_ids.json"
 BIRIKIM_PATH  = r"C:\\adb\\pazar_birikim.json"   # Birikimli kayıt
-ADB           = "adb"
+ADB           = r"D:\\LDPlayer\\LDPlayer9\\adb.exe"
 ADB_SERIAL    = "127.0.0.1:5555"
-PCAP_PATH     = "/data/local/tmp/alarm_scan.pcap"
+PCAP_PATH     = "/sdcard/analiz_scan.pcap"
 LOCAL_PCAP    = r"C:\\adb\\analiz_scan.pcap"
 EXCEL_OUT     = r"C:\\adb\\pazar_analiz.xlsx"
 
@@ -1114,14 +1114,17 @@ def adb(cmd):
 
 def start_tcpdump():
     """IP filtresi YOK - tüm TCP trafiği yakala (iOS ve farklı shard desteği)."""
-    adb("su 0 killall tcpdump 2>/dev/null")
+    try:
+        subprocess.run([ADB, "-s", ADB_SERIAL, "shell", "su", "-c", "killall tcpdump"], capture_output=True, timeout=5)
+    except:
+        pass
     time.sleep(1)
     adb(f'su -c "rm -f {PCAP_PATH}"')
+    adb('su -c "chmod 755 /data/local/tmp/tcpdump"')
     time.sleep(0.3)
-    # ÖNEMLİ: 'host X.X.X.X' filtresi kaldırıldı → tüm TCP
     subprocess.Popen(
-        [ADB, "-s", ADB_SERIAL, "shell",
-         "su", "-c", f"/data/local/tmp/tcpdump -i any -s 0 tcp -w {PCAP_PATH}"],
+        [ADB, "-s", ADB_SERIAL, "shell", "su", "-c",
+         f"/data/local/tmp/tcpdump -i any -s 0 tcp -w {PCAP_PATH}"],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(2)
     log("tcpdump başlatıldı. [Filtre: tüm TCP - iOS uyumlu]")
@@ -1139,7 +1142,9 @@ def get_pcap_size():
     try:
         r = adb(f'su -c "ls -la {PCAP_PATH}"')
         if r and r.stdout:
-            return int(r.stdout.split()[0])
+            parts = r.stdout.decode("utf-8", errors="ignore").strip().split()
+            if len(parts) >= 5:
+                return int(parts[4])
     except:
         pass
     return 0
@@ -1667,9 +1672,11 @@ def start_tcpdump():
         pass
     time.sleep(1.5)
     adb(f'su -c "rm -f {PCAP_PATH}"')
+    adb('su -c "chmod 755 /data/local/tmp/tcpdump"')
     time.sleep(0.5)
     proc = subprocess.Popen(
-        [ADB, "-s", ADB_SERIAL, "shell", f"su 0 tcpdump -i any -s 0 tcp -w {PCAP_PATH}"],
+        [ADB, "-s", ADB_SERIAL, "shell", "su", "-c",
+         f"/data/local/tmp/tcpdump -i any -s 0 tcp -w {PCAP_PATH}"],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
     time.sleep(2)
@@ -1688,9 +1695,14 @@ def pull_pcap():
 
 def get_pcap_size():
     try:
-        r = adb(f"su 0 wc -c {PCAP_PATH} 2>/dev/null")
+        r = adb(f'su -c "ls -la {PCAP_PATH}"')
         if r and r.stdout:
             parts = r.stdout.decode("utf-8", errors="ignore").strip().split()
+            if len(parts) >= 5:
+                return int(parts[4])
+    except:
+        pass
+    return 0
             if parts:
                 return int(parts[0])
     except:
@@ -1979,7 +1991,10 @@ def main():
             log(f"  30sn cooldown sonrasi persomeni tekrar ac.")
             log("")
             # Tcpdump'i yeniden baslat - temiz pcap ile devam et
-            adb("su 0 killall tcpdump 2>/dev/null")
+            try:
+                subprocess.run([ADB, "-s", ADB_SERIAL, "shell", "su", "-c", "killall tcpdump"], capture_output=True, timeout=5)
+            except:
+                pass
             time.sleep(2)
             tcpdump_proc = None  # Dis dongu yeniden baslatacak
             in_burst = False
@@ -1993,7 +2008,10 @@ def main():
         traceback.print_exc()
     finally:
         log("Tcpdump durduruluyor...")
-        adb("su 0 killall tcpdump 2>/dev/null")
+        try:
+            subprocess.run([ADB, "-s", ADB_SERIAL, "shell", "su", "-c", "killall tcpdump"], capture_output=True, timeout=5)
+        except:
+            pass
         log("Sistem durduruldu.")
         input("\\nKapatmak icin Enter'a bas...")
 
