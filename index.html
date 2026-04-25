@@ -323,9 +323,6 @@ tbody td{padding:0;vertical-align:middle;}
     <div class="fg"><label class="fl">Item Adı *</label><input class="fi" id="m-name" type="text" placeholder="örn: Reaper"></div>
     <div class="fg"><label class="fl">Kategori</label>
       <select class="fs" id="m-cat">
-        <option value="unique_silah">⚔ Unique Items</option>
-        <option value="normal_silah">🗡 Normal Silah</option>
-        
       </select>
     </div>
     <div class="fg"><label class="fl">Unique mi?</label>
@@ -871,8 +868,23 @@ function clearPrices() {
 function filterItems() { filterText = document.getElementById('search').value.toLowerCase(); renderTable(); }
 
 // ── MODAL ─────────────────────────────────────────────────────────
-function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
-function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
+function openAddModal() {
+  // Kategori listesini CAT_DATA'dan dinamik doldur
+  const sel = document.getElementById('m-cat');
+  sel.innerHTML = CAT_DATA.map(cat =>
+    `<option value="${cat.id}">${cat.name}</option>`
+  ).join('');
+  // Aktif kategoriyi seç
+  sel.value = activeCat;
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('add-modal').classList.remove('open');
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-levels').value = '';
+  document.getElementById('m-ids').value = '';
+  document.getElementById('m-unique').value = 'true';
+}
 
 function addItem() {
   const name = document.getElementById('m-name').value.trim();
