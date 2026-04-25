@@ -1990,8 +1990,9 @@ def main():
     finally:
         log("Tcpdump durduruluyor...")
         try:
-        subprocess.run([ADB, "-s", ADB_SERIAL, "shell", "su", "-c", "killall tcpdump"], capture_output=True, timeout=5)
-    except: pass
+            subprocess.run([ADB, "-s", ADB_SERIAL, "shell", "su", "-c", "killall tcpdump"], capture_output=True, timeout=5)
+        except:
+            pass
         log("Sistem durduruldu.")
         input("\\nKapatmak icin Enter'a bas...")
 
