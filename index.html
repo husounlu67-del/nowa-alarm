@@ -324,13 +324,8 @@ tbody td{padding:0;vertical-align:middle;}
     <div class="fg"><label class="fl">Kategori</label>
       <select class="fs" id="m-cat">
         <option value="unique_silah">⚔ Unique Items</option>
-        <option value="normal_silah">🗡 Normal Silahlar</option>
-        <option value="warrior_zirh">🛡 Warrior Zırhlar</option>
-        <option value="rogue_zirh">🗡 Rogue Zırhlar</option>
-        <option value="priest_zirh">✨ Priest Zırhlar</option>
-        <option value="mage_zirh">🔮 Mage Zırhlar</option>
-        <option value="taki">💍 Takılar</option>
-        <option value="kutu_gem">📦 Kutu-Gem-Pus</option>
+        <option value="normal_silah">🗡 Normal Silah</option>
+        
       </select>
     </div>
     <div class="fg"><label class="fl">Unique mi?</label>
@@ -1158,12 +1153,15 @@ def pull_pcap():
 
 def read_packets(path):
     packets = []
+    link_type = 1
     try:
         with open(path, "rb") as f:
             magic = f.read(4)
-            if len(magic) < 4: return packets
+            if len(magic) < 4: return packets, link_type
             endian = "<" if magic == b"\\xd4\\xc3\\xb2\\xa1" else ">"
-            f.read(20)
+            gh = f.read(20)
+            if len(gh) == 20:
+                link_type = struct.unpack(endian + "I", gh[16:20])[0]
             while True:
                 hdr = f.read(16)
                 if len(hdr) < 16: break
@@ -1173,10 +1171,10 @@ def read_packets(path):
                     packets.append(data)
     except Exception as e:
         log(f"Pcap okuma: {e}")
-    return packets
+    return packets, link_type
 
 
-def extract_payloads(packets):
+def extract_payloads(packets, link_type=1):
     """
     IP filtresi kaldırıldı. Yeni sunucu IP'leri tespit edilirse kaydedilir.
     Sadece yapısal kontrolle pazar paketleri ayrıştırılır.
@@ -1189,9 +1187,13 @@ def extract_payloads(packets):
             if len(pkt) < 20: continue
             sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
             eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
-            if   sll_et == 0x0800: ip_start = 16
-            elif eth_et == 0x0800: ip_start = 14
-            else: continue
+            if link_type == 276:
+                if len(pkt) < 22 or struct.unpack(">H", pkt[0:2])[0] != 0x0800: continue
+                ip_start = 20
+            else:
+                if   sll_et == 0x0800: ip_start = 16
+                elif eth_et == 0x0800: ip_start = 14
+                else: continue
             if len(pkt) <= ip_start + 20: continue
             if (pkt[ip_start] >> 4) != 4: continue
             ihl   = (pkt[ip_start] & 0x0F) * 4
@@ -1260,9 +1262,7 @@ def parse_records(data):
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            zero7   = data[j+13:j+20]
-
-            if (1_000 <= price <= 2_000_000_000 and zero7 == b"\\x00" * 7):
+            if 1_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
@@ -1504,8 +1504,8 @@ def main():
                 log("PCAP çekme başarısız!")
                 continue
 
-            packets  = read_packets(LOCAL_PCAP)
-            payload  = extract_payloads(packets)
+            packets, link_type = read_packets(LOCAL_PCAP)
+            payload  = extract_payloads(packets, link_type)
             records  = parse_records(payload)
 
             sellers  = len(set(r["seller"] for r in records))
@@ -1690,12 +1690,15 @@ def get_pcap_size():
 
 def read_packets(path):
     packets = []
+    link_type = 1
     try:
         with open(path, "rb") as f:
             magic = f.read(4)
-            if len(magic) < 4: return packets
+            if len(magic) < 4: return packets, link_type
             endian = "<" if magic == b"\\xd4\\xc3\\xb2\\xa1" else ">"
-            f.read(20)
+            gh = f.read(20)
+            if len(gh) == 20:
+                link_type = struct.unpack(endian + "I", gh[16:20])[0]
             while True:
                 hdr = f.read(16)
                 if len(hdr) < 16: break
@@ -1705,24 +1708,28 @@ def read_packets(path):
                     packets.append(data)
     except Exception as e:
         log(f"Pcap okuma hatasi: {e}")
-    return packets
+    return packets, link_type
 
-def extract_server_payloads(packets):
+def extract_server_payloads(packets, link_type=1):
     result = b""
     for pkt in packets:
         try:
             if len(pkt) < 20: continue
-            sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
-            eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
-            if sll_et == 0x0800:   ip_start = 16
-            elif eth_et == 0x0800: ip_start = 14
-            else: continue
+            if link_type == 276:
+                if len(pkt) < 22 or struct.unpack(">H", pkt[0:2])[0] != 0x0800: continue
+                ip_start = 20
+            else:
+                sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
+                eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
+                if sll_et == 0x0800:   ip_start = 16
+                elif eth_et == 0x0800: ip_start = 14
+                else: continue
             if len(pkt) <= ip_start + 20: continue
             if (pkt[ip_start] >> 4) != 4: continue
             ihl    = (pkt[ip_start] & 0x0F) * 4
             proto  = pkt[ip_start + 9]
             src_ip = socket.inet_ntoa(pkt[ip_start + 12:ip_start + 16])
-            if proto != 6: continue  # IP filtresi yok - iOS uyumlu
+            if proto != 6: continue
             tcp_start = ip_start + ihl
             if len(pkt) <= tcp_start + 20: continue
             data_off = ((pkt[tcp_start + 12] >> 4) & 0xF) * 4
@@ -1733,29 +1740,41 @@ def extract_server_payloads(packets):
 
 def parse_market_records(data):
     records, seen, n, i = [], set(), len(data), 0
-    while i < n - 40:
-        if not (data[i]==0x00 and data[i+1]==0x00 and 3<=data[i+2]<=35 and data[i+3]==0x00):
+    while i < n - 22:
+        if data[i] == 0xaa and i + 1 < n and data[i+1] == 0x55:
+            i += 2; continue
+        if i + 2 > n: break
+        name_len = struct.unpack("<H", data[i:i+2])[0]
+        if not (2 <= name_len <= 25):
             i += 1; continue
-        name_len = data[i+2]
-        name_start = i + 4
+        name_start = i + 2
         name_end   = name_start + name_len * 2
-        if name_end + 21 > n: i += 1; continue
-        try:    name = data[name_start:name_end].decode("utf-16-le")
-        except: i += 1; continue
-        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 3): i += 1; continue
+        if name_end + 20 > n:
+            i += 1; continue
+        try:
+            name = data[name_start:name_end].decode("utf-16-le")
+        except:
+            i += 1; continue
+        if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
+            i += 1; continue
         j = name_end
+        item_count = 0
         while j + 20 <= n:
             item_id = data[j+1:j+5].hex()
             price   = struct.unpack("<I", data[j+9:j+13])[0]
-            zeros   = data[j+13:j+20]
-            if 10_000 <= price <= 9_990_000_000 and zeros == b"\\x00" * 7:
+            if 10_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
                 key = (name, item_id, price)
                 if key not in seen:
                     seen.add(key)
                     records.append({"seller": name, "item_id": item_id, "price": price})
-                j += 20; continue
-            break
-        i += 1
+                item_count += 1
+                j += 20
+            else:
+                break
+        if item_count > 0:
+            i = j
+        else:
+            i += 1
     return records
 
 def check_alarms(records):
@@ -1938,8 +1957,8 @@ def main():
                 burst_end_cnt = 0
                 continue
 
-            pkts    = read_packets(LOCAL_PCAP)
-            payload = extract_server_payloads(pkts)
+            pkts, link_type = read_packets(LOCAL_PCAP)
+            payload = extract_server_payloads(pkts, link_type)
             log(f"  {len(pkts)} paket / {len(payload):,} byte server verisi")
 
             if len(payload) == 0:
