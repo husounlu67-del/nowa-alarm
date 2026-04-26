@@ -1607,7 +1607,7 @@ from datetime import datetime
 #  AYARLAR
 # =============================================
 VERSION          = "${version}"
-GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm-script/main/market_alarm.py"
+GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
 GAME_SERVER      = "213.238.175.103"
@@ -1958,7 +1958,7 @@ if __name__ == "__main__":
   }
 
   const REPO_OWNER = 'husounlu67-del';
-  const REPO_NAME  = 'nowa-alarm-script';
+  const REPO_NAME  = 'nowa-alarm';
   const FILE_PATH  = 'market_alarm.py';
   const API_URL    = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
 
@@ -2090,7 +2090,7 @@ async function save() {
     } else {
       setInd('☁ Hata!', '#ff4455');
     }
-  }, 10000);
+  }, 300);
 }
 
 function promptToken() {
