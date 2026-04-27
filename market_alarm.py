@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260427101450
+Versiyon : 20260427115505
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260427101450"
+VERSION          = "20260427115505"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -208,12 +208,12 @@ ALARM_LIST = [
     {"name": "Frozendeath Dagger +6", "max_price": 220000000, "item_ids": ["82651c07"]},
     {"name": "Frozendeath Dagger +7", "max_price": 220000000, "item_ids": ["83651c07"]},
     {"name": "Frozendeath Dagger +8", "max_price": 220000000, "item_ids": ["84651c07"]},
-    {"name": "Frozen Cross Bow +0", "max_price": 220000000, "item_ids": ["8e54170a", "1a56170a"]},
-    {"name": "Frozen Cross Bow +1", "max_price": 220000000, "item_ids": ["1b56170a"]},
-    {"name": "Frozen Cross Bow +2", "max_price": 220000000, "item_ids": ["1c56170a"]},
-    {"name": "Frozen Cross Bow +3", "max_price": 220000000, "item_ids": ["1d56170a"]},
-    {"name": "Frozen Cross Bow +4", "max_price": 220000000, "item_ids": ["1e56170a"]},
-    {"name": "Frozen Cross Bow +5", "max_price": 220000000, "item_ids": ["1f56170a"]},
+    {"name": "Frozen Cross Bow +0", "max_price": 100000000, "item_ids": ["8e54170a", "1a56170a"]},
+    {"name": "Frozen Cross Bow +1", "max_price": 100000000, "item_ids": ["1b56170a"]},
+    {"name": "Frozen Cross Bow +2", "max_price": 100000000, "item_ids": ["1c56170a"]},
+    {"name": "Frozen Cross Bow +3", "max_price": 100000000, "item_ids": ["1d56170a"]},
+    {"name": "Frozen Cross Bow +4", "max_price": 100000000, "item_ids": ["1e56170a"]},
+    {"name": "Frozen Cross Bow +5", "max_price": 100000000, "item_ids": ["1f56170a"]},
     {"name": "Frozen Cross Bow +6", "max_price": 220000000, "item_ids": ["2056170a"]},
     {"name": "Frozen Cross Bow +7", "max_price": 220000000, "item_ids": ["2156170a"]},
     {"name": "Frozen Cross Bow +8", "max_price": 220000000, "item_ids": ["2256170a"]},
