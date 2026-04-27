@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260426235203
+Versiyon : 20260427101450
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260426235203"
+VERSION          = "20260427101450"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -624,7 +624,7 @@ ALARM_LIST = [
     {"name": "Rogue Titan Helmet Reb+5", "max_price": 220000000, "item_ids": ["b909330f"]},
     {"name": "Rogue Titan Pauldron +5", "max_price": 2000000, "item_ids": ["2d6b9a0e", "2b6d9a0e"]},
     {"name": "Rogue Titan Pauldron +6", "max_price": 5000000, "item_ids": ["2e6b9a0e", "2c6d9a0e"]},
-    {"name": "Rogue Titan Pauldron +7", "max_price": 50000000, "item_ids": ["2f6b9a0e", "2d6d9a0e"]},
+    {"name": "Rogue Titan Pauldron +7", "max_price": 10000000, "item_ids": ["2f6b9a0e", "2d6d9a0e"]},
     {"name": "Rogue Titan Pauldron +8", "max_price": 220000000, "item_ids": ["306b9a0e", "2e6d9a0e"]},
     {"name": "Rogue Titan Pauldron Reb+1", "max_price": 10000000, "item_ids": ["e501330f"]},
     {"name": "Rogue Titan Pauldron Reb+2", "max_price": 50000000, "item_ids": ["e601330f"]},
@@ -854,19 +854,19 @@ ALARM_LIST = [
     {"name": "Mage Half Guard Gauntlets +9", "max_price": 220000000, "item_ids": ["29dd9d0f", "3bdf9d0f"]},
     {"name": "Mage Fabric Helmet +7", "max_price": 1000000, "item_ids": ["ff968e0f", "11998e0f"]},
     {"name": "Mage Fabric Helmet +8", "max_price": 20000000, "item_ids": ["00968e0f", "12998e0f"]},
-    {"name": "Mage Fabric Helmet +9", "max_price": 220000000, "item_ids": ["01968e0f", "13998e0f"]},
+    {"name": "Mage Fabric Helmet +9", "max_price": 120000000, "item_ids": ["01968e0f", "13998e0f"]},
     {"name": "Mage Fabric Pauldron +7", "max_price": 1000000, "item_ids": ["81d39d0f", "23918e0f", "41918e0f"]},
     {"name": "Mage Fabric Pauldron +8", "max_price": 20000000, "item_ids": ["82d39d0f", "24918e0f", "42918e0f"]},
-    {"name": "Mage Fabric Pauldron +9", "max_price": 220000000, "item_ids": ["43918e0f", "83d39d0f", "25918e0f"]},
+    {"name": "Mage Fabric Pauldron +9", "max_price": 120000000, "item_ids": ["43918e0f", "83d39d0f", "25918e0f"]},
     {"name": "Mage Fabric Pads +7", "max_price": 1000000, "item_ids": ["17938e0f", "29958e0f"]},
     {"name": "Mage Fabric Pads +8", "max_price": 20000000, "item_ids": ["18938e0f", "2a958e0f"]},
-    {"name": "Mage Fabric Pads +9", "max_price": 220000000, "item_ids": ["19938e0f", "2b958e0f"]},
+    {"name": "Mage Fabric Pads +9", "max_price": 120000000, "item_ids": ["19938e0f", "2b958e0f"]},
     {"name": "Mage Fabric Boots +7", "max_price": 1000000, "item_ids": ["e1a08e0f", "cf9e8e0f", "c3a08e0f"]},
     {"name": "Mage Fabric Boots +8", "max_price": 20000000, "item_ids": ["e2a08e0f", "d09e8e0f", "c4a08e0f"]},
-    {"name": "Mage Fabric Boots +9", "max_price": 220000000, "item_ids": ["e3a08e0f", "d19e8e0f", "c5a08e0f"]},
+    {"name": "Mage Fabric Boots +9", "max_price": 120000000, "item_ids": ["e3a08e0f", "d19e8e0f", "c5a08e0f"]},
     {"name": "Mage Fabric Gauntlets +7", "max_price": 1000000, "item_ids": ["db9c8e0f", "f99c8e0f"]},
     {"name": "Mage Fabric Gauntlets +8", "max_price": 20000000, "item_ids": ["dc9c8e0f", "fa9c8e0f"]},
-    {"name": "Mage Fabric Gauntlets +9", "max_price": 220000000, "item_ids": ["dd9c8e0f", "fb9c8e0f"]},
+    {"name": "Mage Fabric Gauntlets +9", "max_price": 120000000, "item_ids": ["dd9c8e0f", "fb9c8e0f"]},
     {"name": "SKILL QUEST +0", "max_price": 50000000, "item_ids": ["c03da516"]},
     {"name": "Low Mastery CR BOX +0", "max_price": 3000000, "item_ids": ["88f47206"]},
     {"name": "Middle Mastery CR BOX +0", "max_price": 3000000, "item_ids": ["70f87206"]},
@@ -1005,23 +1005,32 @@ def extract_server_payloads(packets, link_type=1):
         try:
             if len(pkt) < 20: continue
             if link_type == 276:
-                if len(pkt) < 22 or struct.unpack(">H", pkt[0:2])[0] != 0x0800: continue
+                # LINUX_SLL2: 20 byte header, EtherType at bytes 0-1
+                if len(pkt) < 20: continue
+                et = struct.unpack(">H", pkt[0:2])[0]
+                if et != 0x0800: continue
                 ip_start = 20
+            elif link_type == 113:
+                # LINUX_SLL: 16 byte header, EtherType at bytes 14-15
+                if len(pkt) < 16: continue
+                et = struct.unpack(">H", pkt[14:16])[0]
+                if et != 0x0800: continue
+                ip_start = 16
             else:
-                sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
-                eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
-                if sll_et == 0x0800:   ip_start = 16
-                elif eth_et == 0x0800: ip_start = 14
-                else: continue
+                # Ethernet: EtherType at bytes 12-13
+                if len(pkt) < 14: continue
+                et = struct.unpack(">H", pkt[12:14])[0]
+                if et != 0x0800: continue
+                ip_start = 14
             if len(pkt) <= ip_start + 20: continue
             if (pkt[ip_start] >> 4) != 4: continue
-            ihl    = (pkt[ip_start] & 0x0F) * 4
-            proto  = pkt[ip_start + 9]
+            ihl      = (pkt[ip_start] & 0x0F) * 4
+            proto    = pkt[ip_start + 9]
             if proto != 6: continue
             tcp_start = ip_start + ihl
             if len(pkt) <= tcp_start + 20: continue
-            data_off = ((pkt[tcp_start + 12] >> 4) & 0xF) * 4
-            payload  = pkt[tcp_start + data_off:]
+            data_off  = ((pkt[tcp_start + 12] >> 4) & 0xF) * 4
+            payload   = pkt[tcp_start + data_off:]
             if len(payload) >= 10: result += payload
         except: pass
     return result
