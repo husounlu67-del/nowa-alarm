@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260427115505
+Versiyon : 20260427125452
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260427115505"
+VERSION          = "20260427125452"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -473,7 +473,7 @@ ALARM_LIST = [
     {"name": "Ring of Shadow Old", "max_price": 50000000, "item_ids": ["cc517114"]},
     {"name": "Ring of Shadow +0", "max_price": 220000000, "item_ids": ["71b1ad13"]},
     {"name": "Hero Earring Old", "max_price": 5000000, "item_ids": ["ddc45614"]},
-    {"name": "Warrior Holy Titan Helmet +4", "max_price": 5000000, "item_ids": ["465b470c", "3c5b470c"]},
+    {"name": "Warrior Holy Titan Helmet +4", "max_price": 3000000, "item_ids": ["465b470c", "3c5b470c"]},
     {"name": "Warrior Holy Titan Helmet +5", "max_price": 5000000, "item_ids": ["475b470c", "3d5b470c"]},
     {"name": "Warrior Holy Titan Helmet +6", "max_price": 15000000, "item_ids": ["485b470c", "3e5b470c"]},
     {"name": "Warrior Holy Titan Helmet +7", "max_price": 35000000, "item_ids": ["3f5b470c", "495b470c"]},
@@ -483,7 +483,7 @@ ALARM_LIST = [
     {"name": "Warrior Holy Titan Helmet Reb+3", "max_price": 220000000, "item_ids": ["bbf1df0c"]},
     {"name": "Warrior Holy Titan Helmet Reb+4", "max_price": 220000000, "item_ids": ["bcf1df0c"]},
     {"name": "Warrior Holy Titan Helmet Reb+5", "max_price": 220000000, "item_ids": ["bdf1df0c"]},
-    {"name": "Warrior Holy Titan Pauldron +4", "max_price": 5000000, "item_ids": ["6c53470c", "7653470c"]},
+    {"name": "Warrior Holy Titan Pauldron +4", "max_price": 3000000, "item_ids": ["6c53470c", "7653470c"]},
     {"name": "Warrior Holy Titan Pauldron +5", "max_price": 5000000, "item_ids": ["6d53470c", "7753470c"]},
     {"name": "Warrior Holy Titan Pauldron +6", "max_price": 15000000, "item_ids": ["6e53470c", "7853470c"]},
     {"name": "Warrior Holy Titan Pauldron +7", "max_price": 35000000, "item_ids": ["7953470c", "6f53470c"]},
@@ -493,7 +493,7 @@ ALARM_LIST = [
     {"name": "Warrior Holy Titan Pauldron Reb+3", "max_price": 220000000, "item_ids": ["ebe9df0c"]},
     {"name": "Warrior Holy Titan Pauldron Reb+4", "max_price": 220000000, "item_ids": ["ece9df0c"]},
     {"name": "Warrior Holy Titan Pauldron Reb+5", "max_price": 220000000, "item_ids": ["ede9df0c"]},
-    {"name": "Warrior Holy Titan Pads +4", "max_price": 5000000, "item_ids": ["5457470c"]},
+    {"name": "Warrior Holy Titan Pads +4", "max_price": 3000000, "item_ids": ["5457470c"]},
     {"name": "Warrior Holy Titan Pads +5", "max_price": 5000000, "item_ids": ["5557470c"]},
     {"name": "Warrior Holy Titan Pads +6", "max_price": 15000000, "item_ids": ["5657470c"]},
     {"name": "Warrior Holy Titan Pads +7", "max_price": 35000000, "item_ids": ["5757470c"]},
@@ -503,7 +503,7 @@ ALARM_LIST = [
     {"name": "Warrior Holy Titan Pads Reb+3", "max_price": 220000000, "item_ids": ["d3eddf0c"]},
     {"name": "Warrior Holy Titan Pads Reb+4", "max_price": 220000000, "item_ids": ["d4eddf0c"]},
     {"name": "Warrior Holy Titan Pads Reb+5", "max_price": 220000000, "item_ids": ["d5eddf0c"]},
-    {"name": "Warrior Holy Titan Boots +4", "max_price": 5000000, "item_ids": ["0c63470c"]},
+    {"name": "Warrior Holy Titan Boots +4", "max_price": 3000000, "item_ids": ["0c63470c"]},
     {"name": "Warrior Holy Titan Boots +5", "max_price": 5000000, "item_ids": ["0d63470c"]},
     {"name": "Warrior Holy Titan Boots +6", "max_price": 15000000, "item_ids": ["0e63470c"]},
     {"name": "Warrior Holy Titan Boots +7", "max_price": 35000000, "item_ids": ["0f63470c"]},
@@ -513,7 +513,7 @@ ALARM_LIST = [
     {"name": "Warrior Holy Titan Boots Reb+3", "max_price": 220000000, "item_ids": ["8bf9df0c"]},
     {"name": "Warrior Holy Titan Boots Reb+4", "max_price": 220000000, "item_ids": ["8cf9df0c"]},
     {"name": "Warrior Holy Titan Boots Reb+5", "max_price": 220000000, "item_ids": ["8df9df0c"]},
-    {"name": "Warrior Holy Titan Gauntlets +4", "max_price": 5000000, "item_ids": ["245f470c", "2e5f470c"]},
+    {"name": "Warrior Holy Titan Gauntlets +4", "max_price": 3000000, "item_ids": ["245f470c", "2e5f470c"]},
     {"name": "Warrior Holy Titan Gauntlets +5", "max_price": 5000000, "item_ids": ["255f470c", "2f5f470c"]},
     {"name": "Warrior Holy Titan Gauntlets +6", "max_price": 15000000, "item_ids": ["305f470c", "265f470c"]},
     {"name": "Warrior Holy Titan Gauntlets +7", "max_price": 35000000, "item_ids": ["315f470c", "275f470c"]},
@@ -526,43 +526,47 @@ ALARM_LIST = [
     {"name": "Warrior Titan Helmet +5", "max_price": 2000000, "item_ids": ["fd18380c", "0719380c"]},
     {"name": "Warrior Titan Helmet +6", "max_price": 5000000, "item_ids": ["fe18380c", "0819380c"]},
     {"name": "Warrior Titan Helmet +7", "max_price": 10000000, "item_ids": ["ff18380c", "0919380c"]},
-    {"name": "Warrior Titan Helmet +8", "max_price": 220000000, "item_ids": ["0a19380c", "0018380c"]},
+    {"name": "Warrior Titan Helmet +8", "max_price": 555000000, "item_ids": ["0a19380c", "0018380c"]},
     {"name": "Warrior Titan Helmet Reb+1", "max_price": 10000000, "item_ids": ["79afd00c"]},
     {"name": "Warrior Titan Helmet Reb+2", "max_price": 50000000, "item_ids": ["7aafd00c"]},
     {"name": "Warrior Titan Helmet Reb+3", "max_price": 70000000, "item_ids": ["7bafd00c"]},
     {"name": "Warrior Titan Helmet Reb+4", "max_price": 220000000, "item_ids": ["7cafd00c"]},
-    {"name": "Warrior Titan Helmet Reb+5", "max_price": 220000000, "item_ids": ["7dafd00c"]},
+    {"name": "Warrior Titan Helmet Reb+5", "max_price": 555000000, "item_ids": ["7dafd00c"]},
     {"name": "Warrior Titan Pauldron +5", "max_price": 2000000, "item_ids": ["2d11380c", "3711380c"]},
     {"name": "Warrior Titan Pauldron +6", "max_price": 5000000, "item_ids": ["2e11380c", "3811380c"]},
     {"name": "Warrior Titan Pauldron +7", "max_price": 10000000, "item_ids": ["3911380c", "2f11380c"]},
-    {"name": "Warrior Titan Pauldron +8", "max_price": 220000000, "item_ids": ["3011380c", "3a11380c"]},
+    {"name": "Warrior Titan Pauldron +8", "max_price": 555000000, "item_ids": ["3011380c", "3a11380c"]},
     {"name": "Warrior Titan Pauldron Reb+1", "max_price": 10000000, "item_ids": ["a9a7d00c"]},
     {"name": "Warrior Titan Pauldron Reb+2", "max_price": 50000000, "item_ids": ["aaa7d00c"]},
     {"name": "Warrior Titan Pauldron Reb+3", "max_price": 70000000, "item_ids": ["aba7d00c"]},
     {"name": "Warrior Titan Pauldron Reb+4", "max_price": 220000000, "item_ids": ["aca7d00c"]},
-    {"name": "Warrior Titan Pauldron Reb+5", "max_price": 220000000, "item_ids": ["ada7d00c"]},
+    {"name": "Warrior Titan Pauldron Reb+5", "max_price": 555000000, "item_ids": ["ada7d00c"]},
     {"name": "Warrior Titan Pads +5", "max_price": 2000000, "item_ids": ["1515380c", "1f15380c"]},
     {"name": "Warrior Titan Pads +6", "max_price": 5000000, "item_ids": ["2015380c", "1615380c"]},
     {"name": "Warrior Titan Pads +7", "max_price": 10000000, "item_ids": ["2115380c", "1715380c"]},
-    {"name": "Warrior Titan Pads +8", "max_price": 220000000, "item_ids": ["2215380c", "1815380c"]},
+    {"name": "Warrior Titan Pads +8", "max_price": 555000000, "item_ids": ["2215380c", "1815380c"]},
     {"name": "Warrior Titan Pads Reb+1", "max_price": 10000000, "item_ids": ["91abd00c"]},
     {"name": "Warrior Titan Pads Reb+2", "max_price": 50000000, "item_ids": ["92abd00c"]},
     {"name": "Warrior Titan Pads Reb+3", "max_price": 70000000, "item_ids": ["93abd00c"]},
     {"name": "Warrior Titan Pads Reb+4", "max_price": 220000000, "item_ids": ["94abd00c"]},
-    {"name": "Warrior Titan Pads Reb+5", "max_price": 220000000, "item_ids": ["95abd00c"]},
+    {"name": "Warrior Titan Pads Reb+5", "max_price": 555000000, "item_ids": ["95abd00c"]},
     {"name": "Warrior Titan Boots +5", "max_price": 2000000, "item_ids": ["cd20380c", "d720380c"]},
     {"name": "Warrior Titan Boots +6", "max_price": 5000000, "item_ids": ["ce20380c", "d820380c"]},
     {"name": "Warrior Titan Boots +7", "max_price": 10000000, "item_ids": ["d920380c", "cf20380c"]},
-    {"name": "Warrior Titan Boots +8", "max_price": 220000000, "item_ids": ["d020380c", "da20380c"]},
+    {"name": "Warrior Titan Boots +8", "max_price": 555000000, "item_ids": ["d020380c", "da20380c"]},
+    {"name": "Warrior Titan Boots Reb+1", "max_price": 20000000, "item_ids": ["49b7d00c"]},
+    {"name": "Warrior Titan Boots Reb+2", "max_price": 20000000, "item_ids": ["4ab7d00c"]},
+    {"name": "Warrior Titan Boots Reb+4", "max_price": 100000000, "item_ids": ["4cb7d00c"]},
+    {"name": "Warrior Titan Boots Reb+5", "max_price": 555000000, "item_ids": ["4db7d00c"]},
     {"name": "Warrior Titan Gauntlets +5", "max_price": 2000000, "item_ids": ["e51c380c", "ef1c380c"]},
     {"name": "Warrior Titan Gauntlets +6", "max_price": 5000000, "item_ids": ["e61c380c", "f01c380c"]},
     {"name": "Warrior Titan Gauntlets +7", "max_price": 10000000, "item_ids": ["f11c380c", "e71c380c"]},
-    {"name": "Warrior Titan Gauntlets +8", "max_price": 220000000, "item_ids": ["e81c380c", "f21c380c"]},
+    {"name": "Warrior Titan Gauntlets +8", "max_price": 555000000, "item_ids": ["e81c380c", "f21c380c"]},
     {"name": "Warrior Titan Gauntlets Reb+1", "max_price": 10000000, "item_ids": ["61b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+2", "max_price": 20000000, "item_ids": ["62b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+3", "max_price": 50000000, "item_ids": ["63b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+4", "max_price": 60000000, "item_ids": ["64b3d00c"]},
-    {"name": "Warrior Titan Gauntlets Reb+5", "max_price": 220000000, "item_ids": ["65b3d00c"]},
+    {"name": "Warrior Titan Gauntlets Reb+5", "max_price": 555000000, "item_ids": ["65b3d00c"]},
     {"name": "Rogue Holy Titan Helmet +4", "max_price": 5000000, "item_ids": ["3ab7a90e", "3cb5a90e"]},
     {"name": "Rogue Holy Titan Helmet +5", "max_price": 5000000, "item_ids": ["3bb7a90e", "3db5a90e"]},
     {"name": "Rogue Holy Titan Helmet +6", "max_price": 15000000, "item_ids": ["3cb7a90e", "3eb5a90e"]},
