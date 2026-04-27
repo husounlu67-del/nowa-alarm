@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260427125452
+Versiyon : 20260427125939
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260427125452"
+VERSION          = "20260427125939"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -556,6 +556,7 @@ ALARM_LIST = [
     {"name": "Warrior Titan Boots +8", "max_price": 555000000, "item_ids": ["d020380c", "da20380c"]},
     {"name": "Warrior Titan Boots Reb+1", "max_price": 20000000, "item_ids": ["49b7d00c"]},
     {"name": "Warrior Titan Boots Reb+2", "max_price": 20000000, "item_ids": ["4ab7d00c"]},
+    {"name": "Warrior Titan Boots Reb+3", "max_price": 70000000, "item_ids": ["4bb7d00c"]},
     {"name": "Warrior Titan Boots Reb+4", "max_price": 100000000, "item_ids": ["4cb7d00c"]},
     {"name": "Warrior Titan Boots Reb+5", "max_price": 555000000, "item_ids": ["4db7d00c"]},
     {"name": "Warrior Titan Gauntlets +5", "max_price": 2000000, "item_ids": ["e51c380c", "ef1c380c"]},
