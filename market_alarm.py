@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260427125939
+Versiyon : 20260427170105
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260427125939"
+VERSION          = "20260427170105"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -421,7 +421,7 @@ ALARM_LIST = [
     {"name": "Fire Ring +0", "max_price": 100000000, "item_ids": ["bc49b913"]},
     {"name": "Fire Ring +1", "max_price": 220000000, "item_ids": ["894bb913"]},
     {"name": "Frozen Ring Old", "max_price": 2000000, "item_ids": ["3f987e14"]},
-    {"name": "Frozen Ring +0", "max_price": 110000000, "item_ids": ["cd70b913"]},
+    {"name": "Frozen Ring +0", "max_price": 30000000, "item_ids": ["cd70b913"]},
     {"name": "Thunder Ring Old", "max_price": 2000000, "item_ids": ["10058314"]},
     {"name": "Essence Pendant Old", "max_price": 2000000, "item_ids": ["17786814"]},
     {"name": "Essence Pendant +0", "max_price": 220000000, "item_ids": ["247e1413"]},
