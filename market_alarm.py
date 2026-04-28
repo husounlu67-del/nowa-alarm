@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260428111849
+Versiyon : 20260428221739
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260428111849"
+VERSION          = "20260428221739"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -544,7 +544,7 @@ ALARM_LIST = [
     {"name": "Warrior Titan Pads +5", "max_price": 2000000, "item_ids": ["1515380c", "1f15380c"]},
     {"name": "Warrior Titan Pads +6", "max_price": 5000000, "item_ids": ["2015380c", "1615380c"]},
     {"name": "Warrior Titan Pads +7", "max_price": 10000000, "item_ids": ["2115380c", "1715380c"]},
-    {"name": "Warrior Titan Pads +8", "max_price": 555000000, "item_ids": ["2215380c", "1815380c"]},
+    {"name": "Warrior Titan Pads +8", "max_price": 220000000, "item_ids": ["2215380c", "1815380c"]},
     {"name": "Warrior Titan Pads Reb+1", "max_price": 10000000, "item_ids": ["91abd00c"]},
     {"name": "Warrior Titan Pads Reb+2", "max_price": 50000000, "item_ids": ["92abd00c"]},
     {"name": "Warrior Titan Pads Reb+3", "max_price": 70000000, "item_ids": ["93abd00c"]},
