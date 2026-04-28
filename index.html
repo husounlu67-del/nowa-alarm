@@ -1895,6 +1895,7 @@ def main():
     # Telegram testi
     log("Telegram test ediliyor...")
     send_telegram(f"NOWA Alarm baslatildi (v{VERSION}). {len(ALARM_LIST)} alarm aktif.")
+    send_status(f"✅ NOWA Alarm baslatildi (v{VERSION})\\n⏱ {datetime.now().strftime('%H:%M')} — {len(ALARM_LIST)} alarm aktif")
     log("")
 
     scan_no      = 0
