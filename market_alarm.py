@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260428101912
+Versiyon : 20260428102037
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260428101912"
+VERSION          = "20260428102037"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -1152,6 +1152,8 @@ def send_status(text):
                 log(f"  Durum botu hatasi: {body[:200]}")
     except Exception as e:
         log(f"  Durum botu hatasi: {e}")
+
+def fire_alarm(item_name, seller, price, max_price):
     log(f"  *** ALARM *** {item_name}  |  {seller}  |  {price:,} gold")
     msg = (
         "NOWA PAZAR ALARMI!\n\n"
