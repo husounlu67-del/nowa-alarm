@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260428103709
+Versiyon : 20260428111849
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260428103709"
+VERSION          = "20260428111849"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -465,7 +465,7 @@ ALARM_LIST = [
     {"name": "Str Necklace +0", "max_price": 100000000, "item_ids": ["471f1c13"]},
     {"name": "Str Necklace +1", "max_price": 220000000, "item_ids": ["25201c13"]},
     {"name": "White Drake Neck Old", "max_price": 2000000, "item_ids": ["7a101b13"]},
-    {"name": "Secret Power Ring Old", "max_price": 5000000, "item_ids": ["8047b213"]},
+    {"name": "Secret Power Ring Old", "max_price": 2000000, "item_ids": ["8047b213"]},
     {"name": "Secret Power Ring +1", "max_price": 220000000, "item_ids": ["79a9b113"]},
     {"name": "Elderwood Ring Old", "max_price": 2000000, "item_ids": ["b754b513"]},
     {"name": "Elderwood Ring +0", "max_price": 220000000, "item_ids": ["59b6b413"]},
