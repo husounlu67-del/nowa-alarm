@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260428102037
+Versiyon : 20260428102204
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,19 +16,15 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260428102037"
+VERSION          = "20260428102204"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
 GAME_SERVER      = "213.238.175.103"
 
-# -- Telegram (Alarm botu) --------------------
+# -- Telegram ---------------------------------
 TELEGRAM_TOKEN   = "8514471086:AAHuzFcpqhWwX1c4cogEo1A11WzXZ-YZhhg"
 TELEGRAM_CHAT_ID = "1598896323"
-# -- Telegram (Durum botu - sessiz) -----------
-STATUS_TOKEN     = "8779317188:AAGIhv8v6YrRNScdPkyLJTNBaZtezIf3dPg"
-STATUS_CHAT_ID   = "1598896323"
-STATUS_INTERVAL  = 15 * 60  # 15 dakikada bir
 # ---------------------------------------------
 
 ALARM_LIST = [
@@ -1083,10 +1079,10 @@ def parse_market_records(data):
             i += 1
     return records
 
-def check_alarms(records, prev_cheapest=None):
+def check_alarms(records):
     if not records:
         log("  Kayit bulunamadi.")
-        return {}
+        return
     log(f"  {len(records)} kayit / {len(set(r['item_id'] for r in records))} unique ID analiz ediliyor...")
     cheapest = {}
     for r in records:
@@ -1100,13 +1096,6 @@ def check_alarms(records, prev_cheapest=None):
         if not hits: continue
         best = min(hits, key=lambda x: x["price"])
         if best["price"] <= alarm["max_price"]:
-            # Çift doğrulama: önceki taramada da aynı fiyat varsa alarm at
-            iid = best["item_id"]
-            if prev_cheapest and iid in prev_cheapest:
-                prev_price = prev_cheapest[iid]["price"]
-                if abs(best["price"] - prev_price) / max(prev_price, 1) > 0.3:
-                    log(f"  ? {alarm['name']:<35} fiyat tutarsiz ({prev_price:,} -> {best['price']:,}), atlandi")
-                    continue
             fire_alarm(alarm["name"], best["seller"], best["price"], alarm["max_price"])
             fired += 1
         else:
@@ -1117,7 +1106,6 @@ def check_alarms(records, prev_cheapest=None):
         log(f"  [{len(unknown)} bilinmeyen ID pazarda goruldu]")
     if fired == 0: log("  -> Esik altinda alarm yok.")
     else:          log(f"  *** {fired} ALARM ATESLENEDI! ***")
-    return cheapest
 
 def send_telegram(text):
     try:
@@ -1133,25 +1121,6 @@ def send_telegram(text):
                 log(f"  Telegram hatasi: {body[:200]}")
     except Exception as e:
         log(f"  Telegram hatasi: {e}")
-
-def send_status(text):
-    try:
-        url     = f"https://api.telegram.org/bot{STATUS_TOKEN}/sendMessage"
-        payload = _json.dumps({
-            "chat_id": STATUS_CHAT_ID,
-            "text": text,
-            "disable_notification": True
-        }).encode("utf-8")
-        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-        ctx = _ssl._create_unverified_context()
-        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
-            body = resp.read().decode("utf-8")
-            if '"ok":true' in body:
-                log("  Durum mesaji gonderildi.")
-            else:
-                log(f"  Durum botu hatasi: {body[:200]}")
-    except Exception as e:
-        log(f"  Durum botu hatasi: {e}")
 
 def fire_alarm(item_name, seller, price, max_price):
     log(f"  *** ALARM *** {item_name}  |  {seller}  |  {price:,} gold")
@@ -1182,15 +1151,12 @@ def main():
     # Telegram testi
     log("Telegram test ediliyor...")
     send_telegram(f"NOWA Alarm baslatildi (v{VERSION}). {len(ALARM_LIST)} alarm aktif.")
-    send_status(f"✅ NOWA Alarm baslatildi (v{VERSION})\n⏱ {datetime.now().strftime('%H:%M')} — {len(ALARM_LIST)} alarm aktif")
     log("")
 
     scan_no      = 0
     tcpdump_proc = None
     last_update_check = time.time()
-    last_status_send  = time.time()
-    prev_cheapest     = {}
-    UPDATE_CHECK_INTERVAL = 60
+    UPDATE_CHECK_INTERVAL = 60  # Her 60 saniyede versiyon kontrol et
 
     BURST_THRESHOLD = 15_000
     BURST_END_SECS  = 3
@@ -1212,12 +1178,7 @@ def main():
                 if time.time() - last_update_check >= UPDATE_CHECK_INTERVAL:
                     last_update_check = time.time()
                     log("Guncelleme kontrol ediliyor...")
-                    check_update()
-
-                # Durum mesaji (her 15 dakika, sessiz)
-                if time.time() - last_status_send >= STATUS_INTERVAL:
-                    last_status_send = time.time()
-                    send_status(f"✅ NOWA Alarm calisiyor (v{VERSION})\n⏱ {datetime.now().strftime('%H:%M')} — {scan_no} tarama yapildi")
+                    check_update()  # Yeni versiyon varsa buradan yeniden baslatir
 
                 sz   = get_pcap_size()
                 diff = sz - prev_size
@@ -1257,7 +1218,7 @@ def main():
                 log("  Server verisi bos.")
             else:
                 recs = parse_market_records(payload)
-                prev_cheapest = check_alarms(recs, prev_cheapest)
+                check_alarms(recs)
 
             log("  30sn sonra persomeni tekrar ac.")
             log("")
