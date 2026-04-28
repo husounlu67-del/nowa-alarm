@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260428100726
+Versiyon : 20260428101343
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260428100726"
+VERSION          = "20260428101343"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -1176,6 +1176,7 @@ def main():
     # Telegram testi
     log("Telegram test ediliyor...")
     send_telegram(f"NOWA Alarm baslatildi (v{VERSION}). {len(ALARM_LIST)} alarm aktif.")
+    send_status(f"✅ NOWA Alarm baslatildi (v{VERSION})\n⏱ {datetime.now().strftime('%H:%M')} — {len(ALARM_LIST)} alarm aktif")
     log("")
 
     scan_no      = 0
