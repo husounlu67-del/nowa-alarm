@@ -1871,6 +1871,8 @@ def send_status(text):
                 log(f"  Durum botu hatasi: {body[:200]}")
     except Exception as e:
         log(f"  Durum botu hatasi: {e}")
+
+def fire_alarm(item_name, seller, price, max_price):
     log(f"  *** ALARM *** {item_name}  |  {seller}  |  {price:,} gold")
     msg = (
         "NOWA PAZAR ALARMI!\\n\\n"
