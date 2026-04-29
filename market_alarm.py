@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260429164054
+Versiyon : 20260429181159
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260429164054"
+VERSION          = "20260429181159"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -526,12 +526,12 @@ ALARM_LIST = [
     {"name": "Warrior Titan Helmet +5", "max_price": 2000000, "item_ids": ["fd18380c", "0719380c"]},
     {"name": "Warrior Titan Helmet +6", "max_price": 5000000, "item_ids": ["fe18380c", "0819380c"]},
     {"name": "Warrior Titan Helmet +7", "max_price": 10000000, "item_ids": ["ff18380c", "0919380c"]},
-    {"name": "Warrior Titan Helmet +8", "max_price": 555000000, "item_ids": ["0a19380c", "0018380c"]},
+    {"name": "Warrior Titan Helmet +8", "max_price": 150000000, "item_ids": ["0a19380c", "0018380c"]},
     {"name": "Warrior Titan Helmet Reb+1", "max_price": 10000000, "item_ids": ["79afd00c"]},
     {"name": "Warrior Titan Helmet Reb+2", "max_price": 50000000, "item_ids": ["7aafd00c"]},
     {"name": "Warrior Titan Helmet Reb+3", "max_price": 70000000, "item_ids": ["7bafd00c"]},
     {"name": "Warrior Titan Helmet Reb+4", "max_price": 220000000, "item_ids": ["7cafd00c"]},
-    {"name": "Warrior Titan Helmet Reb+5", "max_price": 555000000, "item_ids": ["7dafd00c"]},
+    {"name": "Warrior Titan Helmet Reb+5", "max_price": 150000000, "item_ids": ["7dafd00c"]},
     {"name": "Warrior Titan Pauldron +5", "max_price": 2000000, "item_ids": ["2d11380c", "3711380c"]},
     {"name": "Warrior Titan Pauldron +6", "max_price": 5000000, "item_ids": ["2e11380c", "3811380c"]},
     {"name": "Warrior Titan Pauldron +7", "max_price": 10000000, "item_ids": ["3911380c", "2f11380c"]},
