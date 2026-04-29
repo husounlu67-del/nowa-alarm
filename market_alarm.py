@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260429093254
+Versiyon : 20260429164054
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260429093254"
+VERSION          = "20260429164054"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -94,9 +94,9 @@ ALARM_LIST = [
     {"name": "Light Storm Staff Reb+3", "max_price": 220000000, "item_ids": ["65a9480b"]},
     {"name": "Light Storm Staff Reb+4", "max_price": 220000000, "item_ids": ["66a9480b"]},
     {"name": "Light Storm Staff Reb+5", "max_price": 220000000, "item_ids": ["67a9480b"]},
-    {"name": "Arcane Bow +0", "max_price": 70000000, "item_ids": ["3047140a"]},
-    {"name": "Arcane Bow +1", "max_price": 70000000, "item_ids": ["af47140a"]},
-    {"name": "Arcane Bow +2", "max_price": 70000000, "item_ids": ["b047140a"]},
+    {"name": "Arcane Bow +0", "max_price": 20000000, "item_ids": ["3047140a"]},
+    {"name": "Arcane Bow +1", "max_price": 20000000, "item_ids": ["af47140a"]},
+    {"name": "Arcane Bow +2", "max_price": 30000000, "item_ids": ["b047140a"]},
     {"name": "Arcane Bow +3", "max_price": 90000000, "item_ids": ["b147140a"]},
     {"name": "Arcane Bow +4", "max_price": 90000000, "item_ids": ["b247140a"]},
     {"name": "Arcane Bow +5", "max_price": 110000000, "item_ids": ["b347140a"]},
@@ -553,12 +553,12 @@ ALARM_LIST = [
     {"name": "Warrior Titan Boots +5", "max_price": 2000000, "item_ids": ["cd20380c", "d720380c"]},
     {"name": "Warrior Titan Boots +6", "max_price": 5000000, "item_ids": ["ce20380c", "d820380c"]},
     {"name": "Warrior Titan Boots +7", "max_price": 10000000, "item_ids": ["d920380c", "cf20380c"]},
-    {"name": "Warrior Titan Boots +8", "max_price": 555000000, "item_ids": ["d020380c", "da20380c"]},
+    {"name": "Warrior Titan Boots +8", "max_price": 100000000, "item_ids": ["d020380c", "da20380c"]},
     {"name": "Warrior Titan Boots Reb+1", "max_price": 20000000, "item_ids": ["49b7d00c"]},
     {"name": "Warrior Titan Boots Reb+2", "max_price": 20000000, "item_ids": ["4ab7d00c"]},
     {"name": "Warrior Titan Boots Reb+3", "max_price": 70000000, "item_ids": ["4bb7d00c"]},
     {"name": "Warrior Titan Boots Reb+4", "max_price": 100000000, "item_ids": ["4cb7d00c"]},
-    {"name": "Warrior Titan Boots Reb+5", "max_price": 555000000, "item_ids": ["4db7d00c"]},
+    {"name": "Warrior Titan Boots Reb+5", "max_price": 100000000, "item_ids": ["4db7d00c"]},
     {"name": "Warrior Titan Gauntlets +5", "max_price": 2000000, "item_ids": ["e51c380c", "ef1c380c"]},
     {"name": "Warrior Titan Gauntlets +6", "max_price": 5000000, "item_ids": ["e61c380c", "f01c380c"]},
     {"name": "Warrior Titan Gauntlets +7", "max_price": 10000000, "item_ids": ["f11c380c", "e71c380c"]},
@@ -1079,28 +1079,107 @@ def parse_market_records(data):
             i += 1
     return records
 
-def check_alarms(records):
+def parse_per_packet(pkts, link_type=1):
+    """Her TCP paketini ayri ayri parse et - dogrulama icin kullanilir."""
+    verified = set()
+    for pkt in pkts:
+        try:
+            if link_type == 276:
+                if len(pkt) < 22 or struct.unpack(">H", pkt[0:2])[0] != 0x0800: continue
+                ip_start = 20
+            else:
+                sll_et = struct.unpack(">H", pkt[14:16])[0] if len(pkt) > 16 else 0
+                eth_et = struct.unpack(">H", pkt[12:14])[0] if len(pkt) > 14 else 0
+                if sll_et == 0x0800: ip_start = 16
+                elif eth_et == 0x0800: ip_start = 14
+                else: continue
+            if len(pkt) <= ip_start + 20: continue
+            if (pkt[ip_start] >> 4) != 4: continue
+            ihl = (pkt[ip_start] & 0x0F) * 4
+            if pkt[ip_start + 9] != 6: continue
+            ts = ip_start + ihl
+            if len(pkt) <= ts + 20: continue
+            doff = ((pkt[ts + 12] >> 4) & 0xF) * 4
+            data = pkt[ts + doff:]
+            if len(data) < 22: continue
+            # Bu tek paketin payload'inda gecerli kayit ara
+            n = len(data)
+            i = 0
+            while i < n - 22:
+                if data[i] == 0xaa and i+1 < n and data[i+1] == 0x55:
+                    i += 2; continue
+                if i + 2 > n: break
+                name_len = struct.unpack("<H", data[i:i+2])[0]
+                if not (2 <= name_len <= 25): i += 1; continue
+                name_start = i + 2
+                name_end   = name_start + name_len * 2
+                if name_end + 20 > n: i += 1; continue
+                try:
+                    name = data[name_start:name_end].decode("utf-16-le")
+                except:
+                    i += 1; continue
+                if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
+                    i += 1; continue
+                j = name_end
+                item_count = 0
+                while j + 20 <= n:
+                    item_id = data[j+1:j+5].hex()
+                    price   = struct.unpack("<I", data[j+9:j+13])[0]
+                    if 10_000 <= price <= 9_999_999_999 and all(x == 0 for x in data[j+13:j+20]):
+                        verified.add((name, item_id, price))
+                        item_count += 1
+                        j += 20
+                    else:
+                        break
+                if item_count > 0: i = j
+                else: i += 1
+        except:
+            pass
+    return verified
+
+
+def check_alarms(records, pkts=None, link_type=1):
     if not records:
         log("  Kayit bulunamadi.")
         return
     log(f"  {len(records)} kayit / {len(set(r['item_id'] for r in records))} unique ID analiz ediliyor...")
+
+    # Dogrulama: ayni kayitlari paket paket de parse et
+    # Sahte kayitlar (paket siniri byte tesadufu) sadece birlesik parse'da cikar
+    verified = None
+    if pkts:
+        verified = parse_per_packet(pkts, link_type)
+        log(f"  Dogrulama: bireysel paketlerde {len(verified)} kayit bulundu")
+
     cheapest = {}
     for r in records:
         iid = r["item_id"]
         if iid not in cheapest or r["price"] < cheapest[iid]["price"]:
             cheapest[iid] = r
+
     all_alarm_ids = set(iid for alarm in ALARM_LIST for iid in alarm["item_ids"])
     fired = 0
+
     for alarm in ALARM_LIST:
         hits = [cheapest[iid] for iid in alarm["item_ids"] if iid in cheapest]
         if not hits: continue
         best = min(hits, key=lambda x: x["price"])
+
         if best["price"] <= alarm["max_price"]:
+            # Dogrulama: bu kayit bireysel pakette de goruldumu?
+            if verified is not None:
+                key = (best["seller"], best["item_id"], best["price"])
+                if key not in verified:
+                    log(f"  ! SAHTE ALARM ENGELLENDI: {alarm['name']} @ {best['price']:,} gold")
+                    log(f"    Birlesik akisda var, bireysel pakette yok (paket siniri hatasi)")
+                    continue
+
             fire_alarm(alarm["name"], best["seller"], best["price"], alarm["max_price"])
             fired += 1
         else:
             pct = best["price"] / alarm["max_price"] * 100
             log(f"  x {alarm['name']:<35} {best['price']:>14,}  (esik {alarm['max_price']:,}  %{pct:.0f})")
+
     unknown = {iid: cheapest[iid] for iid in cheapest if iid not in all_alarm_ids}
     if unknown:
         log(f"  [{len(unknown)} bilinmeyen ID pazarda goruldu]")
@@ -1218,7 +1297,7 @@ def main():
                 log("  Server verisi bos.")
             else:
                 recs = parse_market_records(payload)
-                check_alarms(recs)
+                check_alarms(recs, pkts=pkts, link_type=link_type)
 
             log("  30sn sonra persomeni tekrar ac.")
             log("")
