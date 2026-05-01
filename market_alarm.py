@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260501083456
+Versiyon : 20260501134710
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260501083456"
+VERSION          = "20260501134710"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -443,7 +443,7 @@ ALARM_LIST = [
     {"name": "Courage Earring Old", "max_price": 12000000, "item_ids": ["5bf38012"]},
     {"name": "Courage Earring +0", "max_price": 220000000, "item_ids": ["797b8012"]},
     {"name": "Courage Earring +1", "max_price": 220000000, "item_ids": ["017c8012"]},
-    {"name": "Shadow Earring Old", "max_price": 4000000, "item_ids": ["ae315b14"]},
+    {"name": "Shadow Earring Old", "max_price": 2000000, "item_ids": ["ae315b14"]},
     {"name": "Shaman Silver Earring Old", "max_price": 2000000, "item_ids": ["6d1a8112"]},
     {"name": "Shaman Silver Earring +0", "max_price": 100000000, "item_ids": ["7b7b8012"]},
     {"name": "Shaman Silver Earring +1", "max_price": 220000000, "item_ids": ["157c8012"]},
@@ -455,7 +455,7 @@ ALARM_LIST = [
     {"name": "Loyal Earring Old", "max_price": 2000000, "item_ids": ["be4e8412"]},
     {"name": "Black Drake Neck Old", "max_price": 2000000, "item_ids": ["5d511813"]},
     {"name": "Blue Drake Neck +0", "max_price": 80000000, "item_ids": ["501f1c13"]},
-    {"name": "Amulet Of Evil Old", "max_price": 3000000, "item_ids": ["b3851b13"]},
+    {"name": "Amulet Of Evil Old", "max_price": 2000000, "item_ids": ["b3851b13"]},
     {"name": "Amulet Of Evil +0", "max_price": 120000000, "item_ids": ["a6981a13"]},
     {"name": "Amulet Of Evil +1", "max_price": 220000000, "item_ids": ["7b991a13"]},
     {"name": "Elder Necklace Old", "max_price": 2000000, "item_ids": ["37031813"]},
