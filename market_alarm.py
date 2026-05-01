@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260501134710
+Versiyon : 20260501154144
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260501134710"
+VERSION          = "20260501154144"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -454,7 +454,6 @@ ALARM_LIST = [
     {"name": "Hero Ring +0", "max_price": 220000000, "item_ids": ["2f15ad13"]},
     {"name": "Loyal Earring Old", "max_price": 2000000, "item_ids": ["be4e8412"]},
     {"name": "Black Drake Neck Old", "max_price": 2000000, "item_ids": ["5d511813"]},
-    {"name": "Blue Drake Neck +0", "max_price": 80000000, "item_ids": ["501f1c13"]},
     {"name": "Amulet Of Evil Old", "max_price": 2000000, "item_ids": ["b3851b13"]},
     {"name": "Amulet Of Evil +0", "max_price": 120000000, "item_ids": ["a6981a13"]},
     {"name": "Amulet Of Evil +1", "max_price": 220000000, "item_ids": ["7b991a13"]},
