@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260501154144
+Versiyon : 20260502163134
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260501154144"
+VERSION          = "20260502163134"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -343,7 +343,7 @@ ALARM_LIST = [
     {"name": "Phantom Sword +3", "max_price": 2000000, "item_ids": ["13dd8807", "3bdd8807"]},
     {"name": "Phantom Sword +4", "max_price": 2000000, "item_ids": ["14dd8807", "3cdd8807"]},
     {"name": "Phantom Sword +5", "max_price": 8000000, "item_ids": ["15dd8807", "3ddd8807"]},
-    {"name": "Phantom Sword +6", "max_price": 20000000, "item_ids": ["16dd8807", "3edd8807"]},
+    {"name": "Phantom Sword +6", "max_price": 5000000, "item_ids": ["16dd8807", "3edd8807"]},
     {"name": "Phantom Sword +7", "max_price": 50000000, "item_ids": ["3fdd8807", "17dd8807"]},
     {"name": "Phantom Sword +8", "max_price": 220000000, "item_ids": ["18dd8807", "40dd8807"]},
     {"name": "Phantom Sword Reb+1", "max_price": 70000000, "item_ids": ["17e18807"]},
