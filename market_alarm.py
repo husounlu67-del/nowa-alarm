@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260503104939
+Versiyon : 20260503133321
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260503104939"
+VERSION          = "20260503133321"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -561,12 +561,12 @@ ALARM_LIST = [
     {"name": "Warrior Titan Gauntlets +5", "max_price": 2000000, "item_ids": ["e51c380c", "ef1c380c"]},
     {"name": "Warrior Titan Gauntlets +6", "max_price": 5000000, "item_ids": ["e61c380c", "f01c380c"]},
     {"name": "Warrior Titan Gauntlets +7", "max_price": 10000000, "item_ids": ["f11c380c", "e71c380c"]},
-    {"name": "Warrior Titan Gauntlets +8", "max_price": 555000000, "item_ids": ["e81c380c", "f21c380c"]},
+    {"name": "Warrior Titan Gauntlets +8", "max_price": 100000000, "item_ids": ["e81c380c", "f21c380c"]},
     {"name": "Warrior Titan Gauntlets Reb+1", "max_price": 10000000, "item_ids": ["61b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+2", "max_price": 20000000, "item_ids": ["62b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+3", "max_price": 50000000, "item_ids": ["63b3d00c"]},
     {"name": "Warrior Titan Gauntlets Reb+4", "max_price": 60000000, "item_ids": ["64b3d00c"]},
-    {"name": "Warrior Titan Gauntlets Reb+5", "max_price": 555000000, "item_ids": ["65b3d00c"]},
+    {"name": "Warrior Titan Gauntlets Reb+5", "max_price": 100000000, "item_ids": ["65b3d00c"]},
     {"name": "Rogue Holy Titan Helmet +4", "max_price": 5000000, "item_ids": ["3ab7a90e", "3cb5a90e"]},
     {"name": "Rogue Holy Titan Helmet +5", "max_price": 5000000, "item_ids": ["3bb7a90e", "3db5a90e"]},
     {"name": "Rogue Holy Titan Helmet +6", "max_price": 15000000, "item_ids": ["3cb7a90e", "3eb5a90e"]},
