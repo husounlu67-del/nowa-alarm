@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260503133321
+Versiyon : 20260503141221
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260503133321"
+VERSION          = "20260503141221"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -298,7 +298,7 @@ ALARM_LIST = [
     {"name": "Shade Dagger Reb+3", "max_price": 220000000, "item_ids": ["19f2a006"]},
     {"name": "Shade Dagger Reb+4", "max_price": 220000000, "item_ids": ["1af2a006"]},
     {"name": "Shade Dagger Reb+5", "max_price": 220000000, "item_ids": ["1bf2a006"]},
-    {"name": "Reaper +1", "max_price": 1500000, "item_ids": ["51934f09", "79934f09"]},
+    {"name": "Reaper +1", "max_price": 2000000, "item_ids": ["51934f09", "79934f09"]},
     {"name": "Reaper +2", "max_price": 3000000, "item_ids": ["52934f09", "7a934f09"]},
     {"name": "Reaper +3", "max_price": 3000000, "item_ids": ["53934f09", "7b934f09"]},
     {"name": "Reaper +4", "max_price": 2000000, "item_ids": ["54934f09", "7c934f09"]},
@@ -364,6 +364,8 @@ ALARM_LIST = [
     {"name": "Giant Reaper Reb+3", "max_price": 220000000, "item_ids": ["f91d5109"]},
     {"name": "Giant Reaper Reb+4", "max_price": 220000000, "item_ids": ["fa1d5109"]},
     {"name": "Giant Reaper Reb+5", "max_price": 220000000, "item_ids": ["fb1d5109"]},
+    {"name": "Giant Thunder Impact +1", "max_price": 2000000, "item_ids": ["7183b808", "9983b808"]},
+    {"name": "Giant Thunder Impact +2", "max_price": 2000000, "item_ids": ["9a83b808", "7283b808"]},
     {"name": "Giant Thunder Impact +3", "max_price": 5000000, "item_ids": ["9b83b808", "7383b808"]},
     {"name": "Giant Thunder Impact +4", "max_price": 7000000, "item_ids": ["9c83b808", "7483b808"]},
     {"name": "Giant Thunder Impact +5", "max_price": 10000000, "item_ids": ["9d83b808", "7583b808"]},
@@ -383,6 +385,10 @@ ALARM_LIST = [
     {"name": "Giant Phantom Sword Reb+3", "max_price": 220000000, "item_ids": ["59ee8b07"]},
     {"name": "Giant Phantom Sword Reb+4", "max_price": 220000000, "item_ids": ["5aee8b07"]},
     {"name": "Giant Phantom Sword Reb+5", "max_price": 220000000, "item_ids": ["5bee8b07"]},
+    {"name": "Giant IronShade Bow +1", "max_price": 3000000, "item_ids": ["d1c80c0a", "f9c80c0a"]},
+    {"name": "Giant IronShade Bow +2", "max_price": 3000000, "item_ids": ["d2c80c0a", "fac80c0a"]},
+    {"name": "Giant IronShade Bow +3", "max_price": 3000000, "item_ids": ["d3c80c0a", "fbc80c0a"]},
+    {"name": "Giant IronShade Bow +4", "max_price": 4000000, "item_ids": ["d4c80c0a", "fcc80c0a"]},
     {"name": "Giant IronShade Bow +5", "max_price": 10000000, "item_ids": ["d5c80c0a", "fdc80c0a"]},
     {"name": "Giant IronShade Bow +6", "max_price": 25000000, "item_ids": ["d6c80c0a", "fec80c0a"]},
     {"name": "Giant IronShade Bow +7", "max_price": 120000000, "item_ids": ["ffc80c0a", "d7c80c0a"]},
@@ -392,11 +398,11 @@ ALARM_LIST = [
     {"name": "Giant IronShade Bow Reb+3", "max_price": 220000000, "item_ids": ["d9cc0c0a"]},
     {"name": "Giant IronShade Bow Reb+4", "max_price": 220000000, "item_ids": ["dacc0c0a"]},
     {"name": "Giant IronShade Bow Reb+5", "max_price": 220000000, "item_ids": ["dbcc0c0a"]},
-    {"name": "Giant Shade Dagger +1", "max_price": 2000000, "item_ids": ["d974a206", "b174a206"]},
-    {"name": "Giant Shade Dagger +2", "max_price": 2000000, "item_ids": ["da74a206", "b274a206"]},
-    {"name": "Giant Shade Dagger +3", "max_price": 3000000, "item_ids": ["db74a206", "b374a206"]},
+    {"name": "Giant Shade Dagger +1", "max_price": 3000000, "item_ids": ["d974a206", "b174a206"]},
+    {"name": "Giant Shade Dagger +2", "max_price": 3000000, "item_ids": ["da74a206", "b274a206"]},
+    {"name": "Giant Shade Dagger +3", "max_price": 5000000, "item_ids": ["db74a206", "b374a206"]},
     {"name": "Giant Shade Dagger +4", "max_price": 5000000, "item_ids": ["dc74a206", "b474a206"]},
-    {"name": "Giant Shade Dagger +5", "max_price": 5000000, "item_ids": ["dd74a206", "b574a206"]},
+    {"name": "Giant Shade Dagger +5", "max_price": 8000000, "item_ids": ["dd74a206", "b574a206"]},
     {"name": "Giant Shade Dagger +6", "max_price": 20000000, "item_ids": ["de74a206", "b674a206"]},
     {"name": "Giant Shade Dagger +7", "max_price": 90000000, "item_ids": ["df74a206", "b774a206"]},
     {"name": "Giant Shade Dagger +8", "max_price": 220000000, "item_ids": ["e074a206", "b874a206"]},
