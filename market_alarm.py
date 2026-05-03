@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260502163134
+Versiyon : 20260503104939
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260502163134"
+VERSION          = "20260503104939"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -97,9 +97,9 @@ ALARM_LIST = [
     {"name": "Arcane Bow +0", "max_price": 20000000, "item_ids": ["3047140a"]},
     {"name": "Arcane Bow +1", "max_price": 20000000, "item_ids": ["af47140a"]},
     {"name": "Arcane Bow +2", "max_price": 30000000, "item_ids": ["b047140a"]},
-    {"name": "Arcane Bow +3", "max_price": 90000000, "item_ids": ["b147140a"]},
-    {"name": "Arcane Bow +4", "max_price": 90000000, "item_ids": ["b247140a"]},
-    {"name": "Arcane Bow +5", "max_price": 110000000, "item_ids": ["b347140a"]},
+    {"name": "Arcane Bow +3", "max_price": 20000000, "item_ids": ["b147140a"]},
+    {"name": "Arcane Bow +4", "max_price": 20000000, "item_ids": ["b247140a"]},
+    {"name": "Arcane Bow +5", "max_price": 30000000, "item_ids": ["b347140a"]},
     {"name": "Arcane Bow +6", "max_price": 150000000, "item_ids": ["b447140a"]},
     {"name": "Arcane Bow +7", "max_price": 220000000, "item_ids": ["b547140a"]},
     {"name": "Arcane Bow +8", "max_price": 220000000, "item_ids": ["b647140a"]},
