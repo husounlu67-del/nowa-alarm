@@ -1891,7 +1891,7 @@ def parse_per_packet(pkts, link_type=1):
                     name = data[name_start:name_end].decode("utf-16-le")
                 except:
                     i += 1; continue
-                if not (all(32 <= ord(c) < 127 for c in name) and len(c) >= 2 for c in [name]):
+                if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
                     i += 1; continue
                 j = name_end
                 item_count = 0
