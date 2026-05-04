@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260504104427
+Versiyon : 20260504120359
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260504104427"
+VERSION          = "20260504120359"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -822,7 +822,7 @@ ALARM_LIST = [
     {"name": "Mage Titan Helmet Reb+4", "max_price": 220000000, "item_ids": ["9a366410"]},
     {"name": "Mage Titan Helmet Reb+5", "max_price": 220000000, "item_ids": ["9b366410"]},
     {"name": "Mage Titan Pauldron +5", "max_price": 500000, "item_ids": ["2d98cb0f", "219acb0f"]},
-    {"name": "Mage Titan Pauldron +6", "max_price": 5000000, "item_ids": ["2e98cb0f", "229acb0f"]},
+    {"name": "Mage Titan Pauldron +6", "max_price": 3000000, "item_ids": ["2e98cb0f", "229acb0f"]},
     {"name": "Mage Titan Pauldron +7", "max_price": 10000000, "item_ids": ["2f98cb0f", "239acb0f"]},
     {"name": "Mage Titan Pauldron +8", "max_price": 220000000, "item_ids": ["3098cb0f", "249acb0f"]},
     {"name": "Mage Titan Pauldron Reb+1", "max_price": 10000000, "item_ids": ["c72e6410"]},
