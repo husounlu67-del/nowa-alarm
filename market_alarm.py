@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260504195709
+Versiyon : 20260504202350
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260504195709"
+VERSION          = "20260504202350"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -706,7 +706,7 @@ ALARM_LIST = [
     {"name": "Priest Holy Titan Pads Reb+2", "max_price": 35000000, "item_ids": ["f0a1a411"]},
     {"name": "Priest Holy Titan Pads Reb+3", "max_price": 50000000, "item_ids": ["f1a1a411"]},
     {"name": "Priest Holy Titan Pads Reb+4", "max_price": 100000000, "item_ids": ["f2a1a411"]},
-    {"name": "Priest Holy Titan Pads Reb+5", "max_price": 220000000, "item_ids": []},
+    {"name": "Priest Holy Titan Pads Reb+5", "max_price": 220000000, "item_ids": ["f3a1a411"]},
     {"name": "Priest Holy Titan Boots +4", "max_price": 5000000, "item_ids": ["00190c11", "3c0f0c11"]},
     {"name": "Priest Holy Titan Boots +5", "max_price": 5000000, "item_ids": ["01190c11", "3d0f0c11"]},
     {"name": "Priest Holy Titan Boots +6", "max_price": 15000000, "item_ids": ["3e0f0c11", "02190c11"]},
