@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260504171443
+Versiyon : 20260504195709
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260504171443"
+VERSION          = "20260504195709"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -196,7 +196,7 @@ ALARM_LIST = [
     {"name": "Thunder Animor +7", "max_price": 220000000, "item_ids": ["c919e10b"]},
     {"name": "Thunder Animor +8", "max_price": 220000000, "item_ids": ["ca19e10b"]},
     {"name": "Firelance +5", "max_price": 65000000, "item_ids": ["8bbf7e09"]},
-    {"name": "Firelance +6", "max_price": 220000000, "item_ids": ["8cbf7e09"]},
+    {"name": "Firelance +6", "max_price": 40000000, "item_ids": ["8cbf7e09"]},
     {"name": "Firelance +7", "max_price": 220000000, "item_ids": ["8dbf7e09"]},
     {"name": "Firelance +8", "max_price": 220000000, "item_ids": ["8ebf7e09"]},
     {"name": "Frozendeath Dagger +0", "max_price": 110000000, "item_ids": ["0b641c07", "7c651c07"]},
@@ -1124,7 +1124,7 @@ def parse_per_packet(pkts, link_type=1):
                     name = data[name_start:name_end].decode("utf-16-le")
                 except:
                     i += 1; continue
-                if not (all(32 <= ord(c) < 127 for c in name) and len(c) >= 2 for c in [name]):
+                if not (all(32 <= ord(c) < 127 for c in name) and len(name) >= 2):
                     i += 1; continue
                 j = name_end
                 item_count = 0
