@@ -1,7 +1,7 @@
 """
 NOWA ONLINE - PAZAR ALARM SISTEMI (Termux / Telefon)
 =====================================================
-Versiyon : 20260507181002
+Versiyon : 20260507205742
 Calistir : python market_alarm.py
 Durdur   : Ctrl+C
 
@@ -16,7 +16,7 @@ from datetime import datetime
 # =============================================
 #  AYARLAR
 # =============================================
-VERSION          = "20260507181002"
+VERSION          = "20260507205742"
 GITHUB_RAW_URL   = "https://raw.githubusercontent.com/husounlu67-del/nowa-alarm/main/market_alarm.py"
 SCRIPT_PATH      = os.path.abspath(__file__)
 PCAP_PATH        = "/data/local/tmp/alarm_scan.pcap"
@@ -319,7 +319,6 @@ ALARM_LIST = [
     {"name": "Reaper Reb+3", "max_price": 220000000, "item_ids": ["59974f09"]},
     {"name": "Reaper Reb+4", "max_price": 220000000, "item_ids": ["5a974f09"]},
     {"name": "Reaper Reb+5", "max_price": 220000000, "item_ids": ["5b974f09"]},
-    {"name": "Thunder Impact +3", "max_price": 2000000, "item_ids": ["d3fcb608", "fbfdb608"]},
     {"name": "Thunder Impact +4", "max_price": 2000000, "item_ids": ["d4fcb608", "fcfdb608"]},
     {"name": "Thunder Impact +5", "max_price": 6000000, "item_ids": ["d5fcb608", "fdfdb608"]},
     {"name": "Thunder Impact +6", "max_price": 20000000, "item_ids": ["d6fcb608", "fefdb608"]},
