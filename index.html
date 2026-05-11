@@ -1024,11 +1024,35 @@ function importData() {
           Object.assign(learnedIDs, d.learnedIDs);
           Object.keys(d.learnedIDs).forEach(id => CONFIRMED_IDS.add(id));
         }
-        // Yeni format: savedIDs
+        // savedIDs formatı: { "catId|itemName|level": {confirmed:[...], predicted:[...]} }
         if (d.savedIDs) {
           restoreCatIds(d.savedIDs);
         }
-        // Eski format: learnedIDs'den CAT_DATA'ya yerleştir
+        // catIds formatı: { catId: { itemName: { level: {ids:[...], confirmed:bool} } } }
+        if (d.catIds) {
+          for (const cat of CAT_DATA) {
+            const catData = d.catIds[cat.id];
+            if (!catData) continue;
+            const allItems = [...cat.items, ...(customItems[cat.id]||[])];
+            for (const item of allItems) {
+              const itemData = catData[item.name];
+              if (!itemData) continue;
+              for (const lv of item.levels) {
+                const lvData = itemData[lv.level];
+                if (!lvData || !lvData.ids || !lvData.ids.length) continue;
+                lv.ids = [];
+                for (const id of lvData.ids) {
+                  if (!lv.ids.includes(id)) lv.ids.push(id);
+                  if (lvData.confirmed) {
+                    CONFIRMED_IDS.add(id);
+                    learnedIDs[id] = item.name + ' ' + lv.level;
+                  }
+                }
+                if (lvData.confirmed) lv.confirmed = true;
+              }
+            }
+          }
+        }
         restoreFromLearnedIDs();
         initPrices();
         save(); buildCatTabs(); renderTable();
