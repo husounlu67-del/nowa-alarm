@@ -1021,8 +1021,25 @@ function importData() {
         if (d.customItems) customItems = d.customItems;
         if (d.selLv) selLv = d.selLv;
         if (d.learnedIDs) {
+          // Yeni ID'leri mevcut learnedIDs'e merge et
           Object.assign(learnedIDs, d.learnedIDs);
+          // Her ID'yi CONFIRMED_IDS'e ekle
           Object.keys(d.learnedIDs).forEach(id => CONFIRMED_IDS.add(id));
+          // CAT_DATA'daki seviyelere ID'leri işle
+          const idMap = d.learnedIDs;
+          for (const cat of CAT_DATA) {
+            for (const item of cat.items) {
+              for (const lv of item.levels) {
+                const fullName = item.name + ' ' + lv.level;
+                for (const [id, name] of Object.entries(idMap)) {
+                  if (name === fullName && !lv.ids.includes(id)) {
+                    lv.ids.push(id);
+                    lv.confirmed = true;
+                  }
+                }
+              }
+            }
+          }
         }
         // savedIDs formatı: { "catId|itemName|level": {confirmed:[...], predicted:[...]} }
         if (d.savedIDs) {
